@@ -1,10 +1,13 @@
 import 'dart:typed_data';
 
+import 'package:example/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_cropping/constant/enums.dart';
 import 'package:image_cropping/image_cropping.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'constants/strings.dart';
 
 void main() {
   runApp(
@@ -24,12 +27,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  /// set the images bytes
   Uint8List? imageBytes;
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('Current state of App :::: $state ');
-  }
 
   @override
   void initState() {
@@ -43,14 +42,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     return SafeArea(
       child: Scaffold(
         body: Container(
-          color: Colors.grey,
+          color: AppColors.grey,
           child: Center(
             child: Center(
               child: InkWell(
                 child: imageBytes == null
                     ? Icon(
                         Icons.add_photo_alternate_outlined,
-                        color: Colors.black,
+                        color: AppColors.black,
                       )
                     : Image.memory(imageBytes!),
                 onTap: () {
@@ -64,6 +63,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     );
   }
 
+  /// Image Picker dialog with Open Camera, Open Gallery and cancel button.
   Future<void> showImagePickerDialog() async {
     Dialog dialog = Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
@@ -77,8 +77,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             Padding(
               padding: EdgeInsets.all(15.0),
               child: Text(
-                'Select Image Source',
-                style: TextStyle(color: Colors.red),
+                Strings.kSelectImageSource,
+                style: TextStyle(color: AppColors.red),
               ),
             ),
             Padding(
@@ -87,34 +87,25 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                TextButton(
+                AppDialogButton(
+                  buttonTitle: Strings.kCamera,
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    back();
                     openImagePicker(ImageSource.camera);
                   },
-                  child: Text(
-                    'Camera',
-                    style: TextStyle(color: Colors.purple, fontSize: 18.0),
-                  ),
                 ),
-                TextButton(
+                AppDialogButton(
+                  buttonTitle: Strings.kGallery,
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    back();
                     openImagePicker(ImageSource.gallery);
                   },
-                  child: Text(
-                    'Gallery',
-                    style: TextStyle(color: Colors.purple, fontSize: 18.0),
-                  ),
                 ),
-                TextButton(
+                AppDialogButton(
+                  buttonTitle: Strings.kCancel,
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    back();
                   },
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.purple, fontSize: 18.0),
-                  ),
                 ),
               ],
             ),
@@ -122,6 +113,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         ),
       ),
     );
+
+    /// To display a dialog
     showDialog(
       context: context,
       builder: (BuildContext context) => dialog,
@@ -129,48 +122,76 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     );
   }
 
+  /// Open image picker
   void openImagePicker(source) async {
     showLoader();
-    var pickedFile = await ImagePicker()
-        .getImage(source: source, maxWidth: 1920, maxHeight: 1920);
+    var pickedFile = await ImagePicker().pickImage(source: source, maxWidth: 1920, maxHeight: 1920);
 
     imageBytes = await pickedFile?.readAsBytes();
     hideLoader();
 
     ImageCropping.cropImage(
-      context,
-      imageBytes!,
-      () {
-        showLoader();
-      },
-      () {
-        hideLoader();
-      },
-      (data) {
+      context: context,
+      imageBytes: imageBytes!,
+      onImageDoneListener: (data) {
         setState(
           () {
             imageBytes = data;
           },
         );
       },
+      onImageStartLoading: showLoader,
+      onImageEndLoading: hideLoader,
       selectedImageRatio: ImageRatio.RATIO_1_1,
       visibleOtherAspectRatios: true,
       squareBorderWidth: 2,
-      squareCircleColor: Colors.black,
-      defaultTextColor: Colors.orange,
-      selectedTextColor: Colors.black,
-      colorForWhiteSpace: Colors.white,
+      squareCircleColor: AppColors.red,
+      defaultTextColor: AppColors.black,
+      selectedTextColor: AppColors.orange,
+      colorForWhiteSpace: AppColors.white,
     );
   }
 
+  /// To display loader with loading text
   void showLoader() {
     if (EasyLoading.isShow) {
       return;
     }
-    EasyLoading.show(status: 'Loading...');
+    EasyLoading.show(status: Strings.kLoading);
   }
 
+  /// To hide loader
   void hideLoader() {
     EasyLoading.dismiss();
+  }
+
+  /// to pop from current
+  void back() {
+    Navigator.of(context).pop();
+  }
+}
+
+/// class for dialog button
+class AppDialogButton extends StatefulWidget {
+  final String buttonTitle;
+  final VoidCallback onPressed;
+  const AppDialogButton({Key? key, required this.buttonTitle, required this.onPressed}) : super(key: key);
+
+  @override
+  State<AppDialogButton> createState() => AppDialogButtonState();
+}
+
+class AppDialogButtonState extends State<AppDialogButton> {
+  Uint8List? imageBytes;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: widget.onPressed,
+      child: Text(
+        widget.buttonTitle,
+        style: TextStyle(color: AppColors.purple, fontSize: 18.0),
+      ),
+    );
   }
 }
