@@ -34,7 +34,8 @@ class _CroppingButtonState extends State<CroppingButton> {
   Widget build(BuildContext context) {
     return Row(
       key: cropMenuGlobalKey,
-      mainAxisAlignment: (kIsWeb) ? MainAxisAlignment.end : MainAxisAlignment.spaceAround,
+      mainAxisAlignment:
+          (kIsWeb) ? MainAxisAlignment.end : MainAxisAlignment.spaceAround,
       children: [
         /// this [appIconButton] icon for rotate the image on left side.
         appIconButton(
@@ -148,7 +149,8 @@ class _CroppingButtonState extends State<CroppingButton> {
       currentRotationDegreeValue += 90;
     }
     libraryImage = Library.copyRotate(libraryImage, currentRotationDegreeValue);
-    widget.imageBytes = Uint8List.fromList(Library.encodeJpg(libraryImage, quality: 100));
+    widget.imageBytes =
+        Uint8List.fromList(Library.encodeJpg(libraryImage, quality: 100));
     finalImageBytes = widget.imageBytes;
     _setImageHeightWidth();
     widget.imageLoadingFinished?.call();

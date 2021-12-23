@@ -125,7 +125,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   /// Open image picker
   void openImagePicker(source) async {
     showLoader();
-    var pickedFile = await ImagePicker().pickImage(source: source, maxWidth: 1920, maxHeight: 1920);
+    var pickedFile = await ImagePicker()
+        .pickImage(source: source, maxWidth: 1920, maxHeight: 1920);
 
     imageBytes = await pickedFile?.readAsBytes();
     hideLoader();
@@ -175,7 +176,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 class AppDialogButton extends StatefulWidget {
   final String buttonTitle;
   final VoidCallback onPressed;
-  const AppDialogButton({Key? key, required this.buttonTitle, required this.onPressed}) : super(key: key);
+  const AppDialogButton(
+      {Key? key, required this.buttonTitle, required this.onPressed})
+      : super(key: key);
 
   @override
   State<AppDialogButton> createState() => AppDialogButtonState();

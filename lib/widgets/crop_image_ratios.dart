@@ -41,7 +41,8 @@ class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Row(
-          mainAxisAlignment: (kIsWeb) ? MainAxisAlignment.end : MainAxisAlignment.spaceAround,
+          mainAxisAlignment:
+              (kIsWeb) ? MainAxisAlignment.end : MainAxisAlignment.spaceAround,
           children: [
             /// This is for free cropping ratio.
             InkWell(
@@ -51,7 +52,9 @@ class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
               child: Text(
                 Strings.ratioFree,
                 style: TextStyle(
-                  color: (selectedImageRatio == ImageRatio.FREE) ? widget.selectedTextColor : widget.defaultTextColor,
+                  color: (selectedImageRatio == ImageRatio.FREE)
+                      ? widget.selectedTextColor
+                      : widget.defaultTextColor,
                 ),
               ),
             ),
@@ -68,7 +71,9 @@ class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
               child: Text(
                 Strings.ratio_1_1,
                 style: TextStyle(
-                  color: (selectedImageRatio == ImageRatio.RATIO_1_1) ? widget.selectedTextColor : widget.defaultTextColor,
+                  color: (selectedImageRatio == ImageRatio.RATIO_1_1)
+                      ? widget.selectedTextColor
+                      : widget.defaultTextColor,
                 ),
               ),
             ),
@@ -85,7 +90,9 @@ class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
               child: Text(
                 Strings.ratio_1_2,
                 style: TextStyle(
-                  color: (selectedImageRatio == ImageRatio.RATIO_1_2) ? widget.selectedTextColor : widget.defaultTextColor,
+                  color: (selectedImageRatio == ImageRatio.RATIO_1_2)
+                      ? widget.selectedTextColor
+                      : widget.defaultTextColor,
                 ),
               ),
             ),
@@ -102,7 +109,9 @@ class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
               child: Text(
                 Strings.ratio_3_2,
                 style: TextStyle(
-                  color: (selectedImageRatio == ImageRatio.RATIO_3_2) ? widget.selectedTextColor : widget.defaultTextColor,
+                  color: (selectedImageRatio == ImageRatio.RATIO_3_2)
+                      ? widget.selectedTextColor
+                      : widget.defaultTextColor,
                 ),
               ),
             ),
@@ -119,7 +128,9 @@ class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
               child: Text(
                 Strings.ratio_4_3,
                 style: TextStyle(
-                  color: (selectedImageRatio == ImageRatio.RATIO_4_3) ? widget.selectedTextColor : widget.defaultTextColor,
+                  color: (selectedImageRatio == ImageRatio.RATIO_4_3)
+                      ? widget.selectedTextColor
+                      : widget.defaultTextColor,
                 ),
               ),
             ),
@@ -136,7 +147,9 @@ class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
               child: Text(
                 Strings.ratio_16_9,
                 style: TextStyle(
-                  color: (selectedImageRatio == ImageRatio.RATIO_16_9) ? widget.selectedTextColor : widget.defaultTextColor,
+                  color: (selectedImageRatio == ImageRatio.RATIO_16_9)
+                      ? widget.selectedTextColor
+                      : widget.defaultTextColor,
                 ),
               ),
             ),
