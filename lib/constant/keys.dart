@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+part of image_cropping;
 
 GlobalKey stackGlobalKey = GlobalKey();
 GlobalKey imageGlobalKey = GlobalKey();

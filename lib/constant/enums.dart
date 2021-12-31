@@ -1,3 +1,5 @@
+part of image_cropping;
+
 enum DragDirection {
   ALL,
   LEFT_TOP,

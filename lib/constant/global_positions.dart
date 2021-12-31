@@ -1,7 +1,4 @@
-import 'package:image/image.dart' as Library;
-import 'dart:typed_data';
-
-import 'enums.dart';
+part of image_cropping;
 
 double leftTopDX = 0;
 double leftTopDY = 0;

@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:example/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:image_cropping/constant/enums.dart';
 import 'package:image_cropping/image_cropping.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -125,32 +124,31 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   /// Open image picker
   void openImagePicker(source) async {
     showLoader();
-    var pickedFile = await ImagePicker()
-        .pickImage(source: source, maxWidth: 1920, maxHeight: 1920);
-
+    var pickedFile = await ImagePicker().pickImage(source: source, maxWidth: 1920, maxHeight: 1920);
     imageBytes = await pickedFile?.readAsBytes();
     hideLoader();
-
-    ImageCropping.cropImage(
-      context: context,
-      imageBytes: imageBytes!,
-      onImageDoneListener: (data) {
-        setState(
-          () {
-            imageBytes = data;
-          },
-        );
-      },
-      onImageStartLoading: showLoader,
-      onImageEndLoading: hideLoader,
-      selectedImageRatio: ImageRatio.RATIO_1_1,
-      visibleOtherAspectRatios: true,
-      squareBorderWidth: 2,
-      squareCircleColor: AppColors.red,
-      defaultTextColor: AppColors.black,
-      selectedTextColor: AppColors.orange,
-      colorForWhiteSpace: AppColors.white,
-    );
+    if (imageBytes != null) {
+      ImageCropping.cropImage(
+        context: context,
+        imageBytes: imageBytes!,
+        onImageDoneListener: (data) {
+          setState(
+            () {
+              imageBytes = data;
+            },
+          );
+        },
+        onImageStartLoading: showLoader,
+        onImageEndLoading: hideLoader,
+        selectedImageRatio: ImageRatio.RATIO_1_1,
+        visibleOtherAspectRatios: true,
+        squareBorderWidth: 2,
+        squareCircleColor: AppColors.red,
+        defaultTextColor: AppColors.black,
+        selectedTextColor: AppColors.orange,
+        colorForWhiteSpace: AppColors.white,
+      );
+    }
   }
 
   /// To display loader with loading text
@@ -176,9 +174,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 class AppDialogButton extends StatefulWidget {
   final String buttonTitle;
   final VoidCallback onPressed;
-  const AppDialogButton(
-      {Key? key, required this.buttonTitle, required this.onPressed})
-      : super(key: key);
+
+  const AppDialogButton({Key? key, required this.buttonTitle, required this.onPressed}) : super(key: key);
 
   @override
   State<AppDialogButton> createState() => AppDialogButtonState();

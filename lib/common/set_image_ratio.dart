@@ -1,5 +1,4 @@
-import 'package:image_cropping/constant/enums.dart';
-import 'package:image_cropping/constant/global_positions.dart';
+part of image_cropping;
 
 class SetImageRatio {
   static void setImageRatio(ImageRatio imageRatio) {
