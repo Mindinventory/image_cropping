@@ -108,8 +108,13 @@ class ImageCroppingScreen extends StatefulWidget {
   /// This property contains Header menu icon size
   double headerMenuSize = 30;
 
-  ImageCroppingScreen(this._context, this._imageBytes, this._onImageStartLoading, this._onImageEndLoading,
-      this._onImageDoneListener, this._colorForWhiteSpace,
+  ImageCroppingScreen(
+      this._context,
+      this._imageBytes,
+      this._onImageStartLoading,
+      this._onImageEndLoading,
+      this._onImageDoneListener,
+      this._colorForWhiteSpace,
       {required this.selectedImageRatio,
       required this.visibleOtherAspectRatios,
       required this.squareBorderWidth,
@@ -181,7 +186,8 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
                           defaultTextColor: widget.defaultTextColor,
                           selectedImageRatio: widget.selectedImageRatio,
                           selectedTextColor: widget.selectedTextColor,
-                          visibleOtherAspectRatios: widget.visibleOtherAspectRatios,
+                          visibleOtherAspectRatios:
+                              widget.visibleOtherAspectRatios,
                         ),
                       ],
                     ),
