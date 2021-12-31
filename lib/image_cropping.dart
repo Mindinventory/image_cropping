@@ -6,17 +6,24 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as Library;
 
-import 'common/app_button.dart';
-import 'common/set_image_ratio.dart';
-import 'constant/enums.dart';
-import 'constant/global_positions.dart';
-import 'constant/keys.dart';
 import 'constant/strings.dart';
-import 'util/image_utils.dart';
-import 'util/widget_bound.dart';
+
+part 'common/set_image_ratio.dart';
+
+part 'constant/enums.dart';
+
+part 'constant/global_positions.dart';
+
+part 'constant/keys.dart';
+
+part 'util/widget_bound.dart';
+
+part 'widgets/app_button.dart';
 
 part 'widgets/crop_image_ratios.dart';
+
 part 'widgets/crop_image_view.dart';
+
 part 'widgets/cropping_button.dart';
 
 class ImageCropping {
@@ -101,13 +108,8 @@ class ImageCroppingScreen extends StatefulWidget {
   /// This property contains Header menu icon size
   double headerMenuSize = 30;
 
-  ImageCroppingScreen(
-      this._context,
-      this._imageBytes,
-      this._onImageStartLoading,
-      this._onImageEndLoading,
-      this._onImageDoneListener,
-      this._colorForWhiteSpace,
+  ImageCroppingScreen(this._context, this._imageBytes, this._onImageStartLoading, this._onImageEndLoading,
+      this._onImageDoneListener, this._colorForWhiteSpace,
       {required this.selectedImageRatio,
       required this.visibleOtherAspectRatios,
       required this.squareBorderWidth,
@@ -179,9 +181,7 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
                           defaultTextColor: widget.defaultTextColor,
                           selectedImageRatio: widget.selectedImageRatio,
                           selectedTextColor: widget.selectedTextColor,
-                          visibleOtherAspectRatios:
-                              widget.visibleOtherAspectRatios,
-                          context: context,
+                          visibleOtherAspectRatios: widget.visibleOtherAspectRatios,
                         ),
                       ],
                     ),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+part of image_cropping;
 
 extension GlobalKeyExtension on GlobalKey {
   Rect? get globalPaintBounds {

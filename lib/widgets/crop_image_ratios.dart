@@ -1,10 +1,20 @@
 part of image_cropping;
 
+/// [ShowCropImageRatios] class shows ratios
 class ShowCropImageRatios extends StatefulWidget {
+
+  /// This property contains boolean value.
+  /// If this properties is true then it shows all other aspect ratios in cropping screen.
+  /// default value is `true`.
   final bool? visibleOtherAspectRatios;
+
+  /// This property contains Color value.
+  /// By passing this property you can set aspect ratios color which is selected.
   final Color? selectedTextColor;
+
+  /// This property contains Color value.
+  /// By passing this property you can set aspect ratios color which are unselected.
   final Color? defaultTextColor;
-  final BuildContext? context;
   final ImageRatio? selectedImageRatio;
   final state;
 
@@ -13,7 +23,6 @@ class ShowCropImageRatios extends StatefulWidget {
     this.selectedImageRatio,
     this.selectedTextColor,
     this.defaultTextColor,
-    this.context,
     this.state,
     Key? key,
   }) : super(key: key);

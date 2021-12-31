@@ -1,17 +1,33 @@
 part of image_cropping;
 
+/// /// [CroppingButton] class shows rotation, done and cancel buttons.
 class CroppingButton extends StatefulWidget {
+
   final state;
   final double? headerMenuSize;
   final BuildContext context;
-  final Color? colorForWhiteSpace;
-  final double? squareCircleSize;
-  final Function()? imageLoadingStarted;
-  final Function()? imageLoadingFinished;
-  final Function(dynamic) onImageDoneListener;
-  late Uint8List imageBytes;
 
-  CroppingButton({
+  /// This property contains Color value.
+  /// By passing this property you can set background color, if screen contains blank space.
+  final Color? colorForWhiteSpace;
+
+  final double? squareCircleSize;
+
+  /// This is a callback. you have to override and show dialog or etc when image cropping is in loading state.
+  final Function()? imageLoadingStarted;
+
+  /// This is a callback. you have to override and hide dialog or etc when image cropping is ready to show result in cropping screen.
+  final Function()? imageLoadingFinished;
+
+  /// This is a callback. you have to override and you will get Uint8List as result.
+  final Function(dynamic) onImageDoneListener;
+
+  /// Image bytes is use to draw image in device and
+  /// if image not fits in device screen then we manage background color
+  /// (if you have passed colorForWhiteSpace or else White background) in image cropping screen.
+  final Uint8List imageBytes;
+
+  const CroppingButton({
     required this.onImageDoneListener,
     required this.imageBytes,
     required this.context,
@@ -34,11 +50,10 @@ class _CroppingButtonState extends State<CroppingButton> {
   Widget build(BuildContext context) {
     return Row(
       key: cropMenuGlobalKey,
-      mainAxisAlignment:
-          (kIsWeb) ? MainAxisAlignment.end : MainAxisAlignment.spaceAround,
+      mainAxisAlignment: (kIsWeb) ? MainAxisAlignment.end : MainAxisAlignment.spaceAround,
       children: [
         /// this [appIconButton] icon for rotate the image on left side.
-        appIconButton(
+        AppButton(
           icon: Icons.rotate_left,
           background: Colors.transparent,
           iconColor: Colors.grey.shade800,
@@ -50,7 +65,7 @@ class _CroppingButtonState extends State<CroppingButton> {
         ),
 
         /// this [appIconButton] icon for rotate the image on right side.
-        appIconButton(
+        AppButton(
           icon: Icons.rotate_right,
           background: Colors.transparent,
           iconColor: Colors.grey.shade800,
@@ -62,7 +77,7 @@ class _CroppingButtonState extends State<CroppingButton> {
         ),
 
         /// this [appIconButton] icon for close the cropping screen.
-        appIconButton(
+        AppButton(
           icon: Icons.close,
           background: Colors.transparent,
           iconColor: Colors.grey.shade800,
@@ -73,7 +88,7 @@ class _CroppingButtonState extends State<CroppingButton> {
         ),
 
         /// this [appIconButton] icon for cropping is done.
-        appIconButton(
+        AppButton(
           icon: Icons.done,
           background: Colors.transparent,
           iconColor: Colors.green,
@@ -149,18 +164,55 @@ class _CroppingButtonState extends State<CroppingButton> {
       currentRotationDegreeValue += 90;
     }
     libraryImage = Library.copyRotate(libraryImage, currentRotationDegreeValue);
-    widget.imageBytes =
-        Uint8List.fromList(Library.encodeJpg(libraryImage, quality: 100));
-    finalImageBytes = widget.imageBytes;
+    finalImageBytes = Uint8List.fromList(Library.encodeJpg(libraryImage, quality: 100));
     _setImageHeightWidth();
     widget.imageLoadingFinished?.call();
     currentRotationDegreeValue = 0;
     state(() {});
   }
 
+
   /// set image width & height.
   void _setImageHeightWidth() {
     imageWidth = libraryImage.width.toDouble();
     imageHeight = libraryImage.height.toDouble();
   }
+
+  /// [setWhiteColorInImage] we set the background in Library image.
+  Library.Image setWhiteColorInImage(
+      Library.Image image,
+      int colorForWhiteSpace,
+      double imageWidth,
+      double imageHeight,
+      double renderedImageWidth,
+      double renderedImageHeight,
+      double stackWidth,
+      double stackHeight) {
+    bool isWhiteVisibleInScreenWidth = stackWidth > renderedImageWidth;
+    bool isWhiteVisibleInScreenHeight = stackHeight > renderedImageHeight;
+
+    double finalImageWidth = (isWhiteVisibleInScreenWidth)
+        ? (stackWidth * imageWidth) / renderedImageWidth
+        : imageWidth;
+    double finalImageHeight = (isWhiteVisibleInScreenHeight)
+        ? (stackHeight * imageHeight) / renderedImageHeight
+        : imageHeight;
+
+    int centreImageWidthPoint = ((finalImageWidth / 2) -
+        (((finalImageWidth * renderedImageWidth) / stackWidth) / 2))
+        .toInt();
+
+    int centreImageHeightPoint = ((finalImageHeight / 2) -
+        (((finalImageHeight * renderedImageHeight) / stackHeight) / 2))
+        .toInt();
+
+    var whiteImage =
+    Library.Image(finalImageWidth.toInt(), finalImageHeight.toInt());
+    whiteImage = whiteImage.fill(colorForWhiteSpace);
+
+    var mergedImage = Library.drawImage(whiteImage, image,
+        dstX: centreImageWidthPoint, dstY: centreImageHeightPoint);
+    return mergedImage;
+  }
+
 }

@@ -82,7 +82,7 @@ This is a callback. you have to override and you will get Uint8List as result.
 ## Optional parameters
 
 ##### ImageRatio:
-This property contains ImageRatio value. You can set the initialized a  spect ratio when starting the cropper by passing a value of ImageRatio. default value is `ImageRatio.FREE`
+This property contains ImageRatio value. You can set the initialized aspect ratio when starting the cropper by passing a value of ImageRatio. default value is `ImageRatio.FREE`
 
 ##### visibleOtherAspectRatios:
 This property contains boolean value. If this properties is true then it shows all other aspect ratios in cropping screen. default value is `true`.
