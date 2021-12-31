@@ -3,7 +3,6 @@ part of image_cropping;
 /// [CroppingImageView] class shows a image.
 /// Also, it shows a cropping buttons and borders.
 class CroppingImageView extends StatefulWidget {
-
   /// This property contains Color value.
   /// By passing this property you can set background color, if screen contains blank space.
   final Color? colorForWhiteSpace;

@@ -1,3 +1,6 @@
+## [0.0.9] - 2021-12-31
+* Performance improvements.
+
 ## [0.0.8] - 2021-12-23
 * Added support for landscape while cropping image and improve performance.
 

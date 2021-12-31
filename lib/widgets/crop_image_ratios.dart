@@ -2,7 +2,6 @@ part of image_cropping;
 
 /// [ShowCropImageRatios] class shows ratios
 class ShowCropImageRatios extends StatefulWidget {
-
   /// This property contains boolean value.
   /// If this properties is true then it shows all other aspect ratios in cropping screen.
   /// default value is `true`.
