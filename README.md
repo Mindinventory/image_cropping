@@ -39,7 +39,7 @@ This plugin supports cropping and rotating images for multiplatform. It Allow in
 ## Usage
 
 ### Example
-    ImageCropper.cropImage(
+    ImageCropping.cropImage(
       context,
       imageBytes!,
       () {
