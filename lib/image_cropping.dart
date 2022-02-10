@@ -6,8 +6,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as Library;
 
-import 'common/compress_process.dart'
-if (dart.library.html) 'common/compress_process_web.dart';
+import 'common/compress_process.dart' if (dart.library.html) 'common/compress_process_web.dart';
 import 'constant/strings.dart';
 
 part 'common/set_image_ratio.dart';
@@ -74,6 +73,7 @@ class ImageCroppingScreen extends StatefulWidget {
   /// This property contains ImageRatio value. You can set the initialized a  spect ratio when starting the cropper by passing a value of ImageRatio. default value is `ImageRatio.FREE`
   ImageRatio selectedImageRatio = ImageRatio.FREE;
 
+  /// This property will be used tom perform image compression before showing up
   late final ImageProcess process;
 
   /// This property contains boolean value. If this properties is true then it shows all other aspect ratios in cropping2 screen. default value is `true`.
@@ -131,18 +131,9 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
   @override
   void initState() {
     /// Generate Image from image bytes.
-    _generateLibraryImage();
-
-    /// Set device height & width from image.
-    _setDeviceHeightWidth();
-
-    /// Set Image ratio for cropping2 the image.
-    SetImageRatio.setImageRatio(widget.selectedImageRatio);
-
-    /// Set default button position (left, right, top, bottom) in center of the screen.
-    SetImageRatio.setDefaultButtonPosition();
 
     super.initState();
+    _generateLibraryImage();
   }
 
   @override
