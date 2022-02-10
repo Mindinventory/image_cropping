@@ -145,7 +145,6 @@ class _CroppingButtonState extends State<CroppingButton> {
       imageCropWidth.toInt(),
       imageCropHeight.toInt(),
       (image, bytes) {
-        print('TAKEN ${DateTime.now().millisecondsSinceEpoch-timeStamp}');
         libraryImage=image;
         widget.imageLoadingFinished?.call();
         widget.onImageDoneListener(bytes);

@@ -193,15 +193,6 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
   }
 
   /// Generate image from image bytes.
-  // void _generateLibraryImage() async {
-  //   // libraryImage = getCompressedImage(widget._imageBytes);
-  //   // finalImageBytes = widget._imageBytes;
-  //   finalImageBytes=compute(convertImageToBytes);
-  //   _setImageHeightWidth();
-  //   setState(() {});
-  // }
-
-  /// Generate image from image bytes.
   void _generateLibraryImage() async {
     /// Set device height & width from image.
 
