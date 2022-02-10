@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as Library;
 
+import 'common/compress_process.dart'
+if (dart.library.html) 'common/compress_process_web.dart';
 import 'constant/strings.dart';
 
 part 'common/set_image_ratio.dart';
@@ -42,7 +44,7 @@ class ImageCropping {
       Color selectedTextColor = Colors.orange,
       Color colorForWhiteSpace = Colors.white,
       Key? key}) {
-    /// Here, we are pushing a image cropping screen.
+    /// Here, we are pushing a image cropping2 screen.
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_context) => ImageCroppingScreen(
@@ -69,19 +71,18 @@ class ImageCroppingScreen extends StatefulWidget {
   /// context is use to get height & width of screen and pop this screen.
   BuildContext _context;
 
-  /// [_imageBytes] is use to draw image in device and if image not fits in device screen then we manage background color(if you have passed colorForWhiteSpace or else White background) in image cropping screen.
-  late Uint8List _imageBytes;
-
   /// This property contains ImageRatio value. You can set the initialized a  spect ratio when starting the cropper by passing a value of ImageRatio. default value is `ImageRatio.FREE`
   ImageRatio selectedImageRatio = ImageRatio.FREE;
 
-  /// This property contains boolean value. If this properties is true then it shows all other aspect ratios in cropping screen. default value is `true`.
+  late final ImageProcess process;
+
+  /// This property contains boolean value. If this properties is true then it shows all other aspect ratios in cropping2 screen. default value is `true`.
   bool visibleOtherAspectRatios = true;
 
-  /// This is a callback. you have to override and show dialog or etc when image cropping is in loading state.
+  /// This is a callback. you have to override and show dialog or etc when image cropping2 is in loading state.
   VoidCallback? _onImageStartLoading;
 
-  /// This is a callback. you have to override and hide dialog or etc when image cropping is ready to show result in cropping screen.
+  /// This is a callback. you have to override and hide dialog or etc when image cropping2 is ready to show result in cropping2 screen.
   VoidCallback? _onImageEndLoading;
 
   /// This is a callback. you have to override and you will get Uint8List as result.
@@ -108,13 +109,8 @@ class ImageCroppingScreen extends StatefulWidget {
   /// This property contains Header menu icon size
   double headerMenuSize = 30;
 
-  ImageCroppingScreen(
-      this._context,
-      this._imageBytes,
-      this._onImageStartLoading,
-      this._onImageEndLoading,
-      this._onImageDoneListener,
-      this._colorForWhiteSpace,
+  ImageCroppingScreen(this._context, Uint8List _imageBytes, this._onImageStartLoading, this._onImageEndLoading,
+      this._onImageDoneListener, this._colorForWhiteSpace,
       {required this.selectedImageRatio,
       required this.visibleOtherAspectRatios,
       required this.squareBorderWidth,
@@ -123,7 +119,9 @@ class ImageCroppingScreen extends StatefulWidget {
       required this.selectedTextColor,
       required this.squareCircleSize,
       Key? key})
-      : super(key: key);
+      : super(key: key) {
+    process = ImageProcess(_imageBytes);
+  }
 
   @override
   _ImageCroppingScreenState createState() => _ImageCroppingScreenState();
@@ -138,7 +136,7 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
     /// Set device height & width from image.
     _setDeviceHeightWidth();
 
-    /// Set Image ratio for cropping the image.
+    /// Set Image ratio for cropping2 the image.
     SetImageRatio.setImageRatio(widget.selectedImageRatio);
 
     /// Set default button position (left, right, top, bottom) in center of the screen.
@@ -164,8 +162,9 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
                     child: Column(
                       children: [
                         CroppingButton(
-                          imageBytes: widget._imageBytes,
+                          imageBytes: widget.process.imageBytes,
                           context: context,
+                          imageProcess: widget.process,
                           onImageDoneListener: widget._onImageDoneListener,
                           colorForWhiteSpace: widget._colorForWhiteSpace,
                           headerMenuSize: widget.headerMenuSize,
@@ -186,8 +185,7 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
                           defaultTextColor: widget.defaultTextColor,
                           selectedImageRatio: widget.selectedImageRatio,
                           selectedTextColor: widget.selectedTextColor,
-                          visibleOtherAspectRatios:
-                              widget.visibleOtherAspectRatios,
+                          visibleOtherAspectRatios: widget.visibleOtherAspectRatios,
                         ),
                       ],
                     ),
@@ -204,22 +202,35 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
   }
 
   /// Generate image from image bytes.
-  void _generateLibraryImage() {
-    libraryImage = getCompressedImage(widget._imageBytes);
-    finalImageBytes = widget._imageBytes;
-    _setImageHeightWidth();
-    setState(() {});
-  }
+  // void _generateLibraryImage() async {
+  //   // libraryImage = getCompressedImage(widget._imageBytes);
+  //   // finalImageBytes = widget._imageBytes;
+  //   finalImageBytes=compute(convertImageToBytes);
+  //   _setImageHeightWidth();
+  //   setState(() {});
+  // }
 
-  /// Resize image and return the result.
-  static Library.Image getCompressedImage(Uint8List _imageData) {
-    Library.Image image = Library.decodeImage(_imageData)!;
-    if (image.width > 1920) {
-      image = Library.copyResize(image, width: 1920);
-    } else if (image.height > 1920) {
-      image = Library.copyResize(image, height: 1920);
-    }
-    return image;
+  /// Generate image from image bytes.
+  void _generateLibraryImage() async {
+    /// Set device height & width from image.
+
+    /// Set Image ratio for cropping2 the image.
+
+    /// Set default button position (left, right, top, bottom) in center of the screen.
+
+    widget.process.compress(() {
+      widget._onImageEndLoading?.call();
+      finalImageBytes = widget.process.imageBytes;
+      _setDeviceHeightWidth();
+
+      SetImageRatio.setImageRatio(widget.selectedImageRatio);
+      SetImageRatio.setDefaultButtonPosition();
+      setState(() {});
+    }, (image) {
+      libraryImage = image;
+      _setImageHeightWidth();
+      setState(() {});
+    });
   }
 
   /// set device width & height

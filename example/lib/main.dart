@@ -124,11 +124,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   /// Open image picker
   void openImagePicker(source) async {
     showLoader();
-    var pickedFile = await ImagePicker()
+    final pickedFile = await ImagePicker()
         .pickImage(source: source, maxWidth: 1920, maxHeight: 1920);
     imageBytes = await pickedFile?.readAsBytes();
-    hideLoader();
+
     if (imageBytes != null) {
+
       ImageCropping.cropImage(
         context: context,
         imageBytes: imageBytes!,

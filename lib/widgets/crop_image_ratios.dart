@@ -3,7 +3,7 @@ part of image_cropping;
 /// [ShowCropImageRatios] class shows ratios
 class ShowCropImageRatios extends StatefulWidget {
   /// This property contains boolean value.
-  /// If this properties is true then it shows all other aspect ratios in cropping screen.
+  /// If this properties is true then it shows all other aspect ratios in cropping2 screen.
   /// default value is `true`.
   final bool? visibleOtherAspectRatios;
 
@@ -33,7 +33,7 @@ class ShowCropImageRatios extends StatefulWidget {
 class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
   @override
   void initState() {
-    /// Set Image ratio for cropping the image.
+    /// Set Image ratio for cropping2 the image.
     SetImageRatio.setImageRatio(widget.selectedImageRatio!);
 
     /// Set default button position (left, right, top, bottom) in center of the screen.
