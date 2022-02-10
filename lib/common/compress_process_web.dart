@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:image/image.dart';
 
 class ImageProcess {
-
   // compressing cropping process for web is done here
   late final html.Worker worker;
   Uint8List imageBytes;
@@ -36,6 +35,7 @@ class ImageProcess {
       imageCropHeight,
     ]);
     final event = await worker.onMessage.first;
-    onImageLoaded.call(Image.fromBytes(imageCropWidth, imageCropHeight, event.data[0],channels: Channels.rgb), event.data[1]);
+    onImageLoaded.call(
+        Image.fromBytes(imageCropWidth, imageCropHeight, event.data[0], channels: Channels.rgb), event.data[1]);
   }
 }
