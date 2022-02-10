@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:image/image.dart' as Library;
 
 class ImageProcess {
+  // compressing cropping process is done here
   Uint8List imageBytes;
 
   ImageProcess(this.imageBytes);

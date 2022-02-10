@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:image/image.dart';
 
 class ImageProcess {
+
+  // compressing cropping process for web is done here
   late final html.Worker worker;
   Uint8List imageBytes;
 
@@ -12,7 +14,6 @@ class ImageProcess {
   }
 
   void compress(Function() onBytesLoaded, Function(Image) onLibraryImageLoaded) async {
-    print('web called');
     worker.postMessage([0, imageBytes]);
     final event = await worker.onMessage.first;
     final List<int> intList = event.data[0];
