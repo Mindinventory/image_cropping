@@ -35,8 +35,7 @@ This plugin supports cropping and rotating images for multiplatform. It Allow in
 ### Change ratio of selection.
 ![Image Plugin](https://github.com/Mindinventory/image_cropping/blob/master/assets/image_plugin_3.gif)
 
-
-## Usage
+## Installation
 If you are targeting web, don't forget to add worker.js, worker.js.deps, worker.js.map in your project's root directory.
 
 ### Example
