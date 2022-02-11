@@ -6,7 +6,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as Library;
 
-import 'common/compress_process.dart' if (dart.library.html) 'common/compress_process_web.dart';
+import 'common/compress_process.dart'
+if (dart.library.html) 'common/compress_process_web.dart';
 import 'constant/strings.dart';
 
 part 'common/set_image_ratio.dart';

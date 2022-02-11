@@ -119,7 +119,6 @@ It would be great for us if the reporter can share the below things to understan
 
 ## Library used
 - [Image](https://pub.dev/packages/image "Image")
-- [flutter_image_compress](https://pub.dev/packages/flutter_image_compress "flutter_image_compress")
 
 # LICENSE!
 Image Cropper is [MIT-licensed](https://github.com/Mindinventory/image_cropping/blob/master/LICENSE "MIT-licensed").
