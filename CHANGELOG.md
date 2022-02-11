@@ -1,3 +1,6 @@
+## [0.0.10] - 2022-02-11
+* Fixed: UI getting stuck when opening and cropping image for the web.
+
 ## [0.0.9] - 2021-12-31
 * Performance improvements.
 
