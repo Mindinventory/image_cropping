@@ -37,6 +37,7 @@ This plugin supports cropping and rotating images for multiplatform. It Allow in
 
 
 ## Usage
+If you are targeting web, don't forget to add worker.js, worker.js.deps, worker.js.map in your projects root directory.
 
 ### Example
     ImageCropper.cropImage(

@@ -3,15 +3,19 @@ import 'dart:typed_data';
 
 import 'package:image/image.dart';
 
+/// compressing cropping process for web is done here
 class ImageProcess {
-  // compressing cropping process for web is done here
+  /// web worker to do multithreaded computation.
   late final html.Worker worker;
+
+  /// image bytes which will be of user's picked image.
   Uint8List imageBytes;
 
   ImageProcess(this.imageBytes) {
     worker = html.Worker('worker.js');
   }
 
+  /// compressed image is shown for user's reference
   void compress(Function() onBytesLoaded, Function(Image) onLibraryImageLoaded) async {
     worker.postMessage([0, imageBytes]);
     final event = await worker.onMessage.first;
@@ -22,6 +26,7 @@ class ImageProcess {
     onLibraryImageLoaded.call(image);
   }
 
+  /// Image cropping will be done by crop method
   void crop(Image libraryImage, int imageCropX, int imageCropY, int imageCropWidth, int imageCropHeight,
       Function(Image, Uint8List) onImageLoaded) async {
     worker.postMessage([
