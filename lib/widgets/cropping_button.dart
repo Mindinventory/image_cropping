@@ -51,7 +51,8 @@ class _CroppingButtonState extends State<CroppingButton> {
   Widget build(BuildContext context) {
     return Row(
       key: cropMenuGlobalKey,
-      mainAxisAlignment: (kIsWeb) ? MainAxisAlignment.end : MainAxisAlignment.spaceAround,
+      mainAxisAlignment:
+          (kIsWeb) ? MainAxisAlignment.end : MainAxisAlignment.spaceAround,
       children: [
         /// this [appIconButton] icon for rotate the image on left side.
         AppButton(
@@ -115,7 +116,6 @@ class _CroppingButtonState extends State<CroppingButton> {
 
     // _libraryImage = Library.bakeOrientation(_libraryImage);
 
-
     libraryImage = setWhiteColorInImage(
       libraryImage,
       widget.colorForWhiteSpace!.value,
@@ -137,7 +137,7 @@ class _CroppingButtonState extends State<CroppingButton> {
     var imageCropY = (imageHeight * leftY) / stackHeight;
     var imageCropWidth = (imageWidth * cropSizeWidth) / stackWidth;
     var imageCropHeight = (imageHeight * cropSizeHeight) / stackHeight;
-    final timeStamp=DateTime.now().millisecondsSinceEpoch;
+    final timeStamp = DateTime.now().millisecondsSinceEpoch;
     widget.imageProcess.crop(
       libraryImage,
       imageCropX.toInt(),
@@ -145,11 +145,10 @@ class _CroppingButtonState extends State<CroppingButton> {
       imageCropWidth.toInt(),
       imageCropHeight.toInt(),
       (image, bytes) {
-        libraryImage=image;
+        libraryImage = image;
         widget.imageLoadingFinished?.call();
         widget.onImageDoneListener(bytes);
         Navigator.pop(widget.context);
-
       },
     );
   }
@@ -163,7 +162,8 @@ class _CroppingButtonState extends State<CroppingButton> {
       currentRotationDegreeValue += 90;
     }
     libraryImage = Library.copyRotate(libraryImage, currentRotationDegreeValue);
-    finalImageBytes = Uint8List.fromList(Library.encodeJpg(libraryImage, quality: 100));
+    finalImageBytes =
+        Uint8List.fromList(Library.encodeJpg(libraryImage, quality: 100));
     _setImageHeightWidth();
     widget.imageLoadingFinished?.call();
     currentRotationDegreeValue = 0;
@@ -177,26 +177,39 @@ class _CroppingButtonState extends State<CroppingButton> {
   }
 
   /// [setWhiteColorInImage] we set the background in Library image.
-  Library.Image setWhiteColorInImage(Library.Image image, int colorForWhiteSpace, double imageWidth, double imageHeight,
-      double renderedImageWidth, double renderedImageHeight, double stackWidth, double stackHeight) {
+  Library.Image setWhiteColorInImage(
+      Library.Image image,
+      int colorForWhiteSpace,
+      double imageWidth,
+      double imageHeight,
+      double renderedImageWidth,
+      double renderedImageHeight,
+      double stackWidth,
+      double stackHeight) {
     bool isWhiteVisibleInScreenWidth = stackWidth > renderedImageWidth;
     bool isWhiteVisibleInScreenHeight = stackHeight > renderedImageHeight;
 
-    double finalImageWidth =
-        (isWhiteVisibleInScreenWidth) ? (stackWidth * imageWidth) / renderedImageWidth : imageWidth;
-    double finalImageHeight =
-        (isWhiteVisibleInScreenHeight) ? (stackHeight * imageHeight) / renderedImageHeight : imageHeight;
+    double finalImageWidth = (isWhiteVisibleInScreenWidth)
+        ? (stackWidth * imageWidth) / renderedImageWidth
+        : imageWidth;
+    double finalImageHeight = (isWhiteVisibleInScreenHeight)
+        ? (stackHeight * imageHeight) / renderedImageHeight
+        : imageHeight;
 
-    int centreImageWidthPoint =
-        ((finalImageWidth / 2) - (((finalImageWidth * renderedImageWidth) / stackWidth) / 2)).toInt();
+    int centreImageWidthPoint = ((finalImageWidth / 2) -
+            (((finalImageWidth * renderedImageWidth) / stackWidth) / 2))
+        .toInt();
 
-    int centreImageHeightPoint =
-        ((finalImageHeight / 2) - (((finalImageHeight * renderedImageHeight) / stackHeight) / 2)).toInt();
+    int centreImageHeightPoint = ((finalImageHeight / 2) -
+            (((finalImageHeight * renderedImageHeight) / stackHeight) / 2))
+        .toInt();
 
-    var whiteImage = Library.Image(finalImageWidth.toInt(), finalImageHeight.toInt());
+    var whiteImage =
+        Library.Image(finalImageWidth.toInt(), finalImageHeight.toInt());
     whiteImage = whiteImage.fill(colorForWhiteSpace);
 
-    var mergedImage = Library.drawImage(whiteImage, image, dstX: centreImageWidthPoint, dstY: centreImageHeightPoint);
+    var mergedImage = Library.drawImage(whiteImage, image,
+        dstX: centreImageWidthPoint, dstY: centreImageHeightPoint);
     return mergedImage;
   }
 }

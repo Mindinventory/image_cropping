@@ -129,7 +129,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     imageBytes = await pickedFile?.readAsBytes();
 
     if (imageBytes != null) {
-
       ImageCropping.cropImage(
         context: context,
         imageBytes: imageBytes!,

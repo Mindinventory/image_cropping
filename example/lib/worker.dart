@@ -26,7 +26,8 @@ void main() {
       );
     } else if (arguments[0] == 1) {
       final libraryImage = Library.copyCrop(
-        Library.Image.fromBytes(arguments[2], arguments[3],arguments[1], channels: Library.Channels.rgb),
+        Library.Image.fromBytes(arguments[2], arguments[3], arguments[1],
+            channels: Library.Channels.rgb),
         arguments[4],
         arguments[5],
         arguments[6],
