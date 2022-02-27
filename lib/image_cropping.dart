@@ -46,6 +46,7 @@ class ImageCropping {
       Color colorForWhiteSpace = Colors.white,
       bool isConstrain = true,
       bool makeDarkerOutside = true,
+      EdgeInsets? imageEdgeInsets = const EdgeInsets.all(10),
       Key? key}) {
     /// Here, we are pushing a image cropping2 screen.
     Navigator.of(context).push(
@@ -66,6 +67,7 @@ class ImageCropping {
           selectedTextColor: selectedTextColor,
           isConstrain : isConstrain,
           makeDarkerOutside : makeDarkerOutside,
+          imageEdgeInsets : imageEdgeInsets,
         ),
       ),
     );
@@ -115,6 +117,9 @@ class ImageCroppingScreen extends StatefulWidget {
   /// This property contains Header menu icon size
   double headerMenuSize = 30;
 
+  /// This property is inner insets of image
+  EdgeInsets? imageEdgeInsets;
+
   /// This property makes SquareCircle can't go outside of image
   bool isConstrain;
 
@@ -137,6 +142,7 @@ class ImageCroppingScreen extends StatefulWidget {
       required this.squareCircleSize,
       required this.isConstrain,
       required this.makeDarkerOutside,
+      required this.imageEdgeInsets,
       Key? key})
       : super(key: key) {
     process = ImageProcess(_imageBytes);
@@ -191,6 +197,7 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
                           squareCircleColor: widget.squareCircleColor,
                           makeDarkerOutside: widget.makeDarkerOutside,
                           isConstrain: widget.isConstrain,
+                          imageEdgeInsets: widget.imageEdgeInsets,
                         ),
                         ShowCropImageRatios(
                           state: state,
