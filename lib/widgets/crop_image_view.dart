@@ -19,11 +19,16 @@ class CroppingImageView extends StatefulWidget {
 
   final state;
 
+  final bool? makeDarkerOutside;
+  final bool? isConstrain;
+
   const CroppingImageView({
     this.colorForWhiteSpace,
     this.squareCircleSize,
     this.squareBorderWidth,
     this.squareCircleColor,
+    this.makeDarkerOutside,
+    this.isConstrain,
     this.state,
     Key? key,
   }) : super(key: key);
@@ -40,8 +45,11 @@ class _CroppingImageViewState extends State<CroppingImageView> {
         child: Stack(
           key: stackGlobalKey,
           children: [
+
             /// Showing image in screen
             loadImage(),
+
+            showImageDarkFilter(widget.state),
 
             /// Showing border of crop view.
             showImageCropButtonsBorder(widget.state),
@@ -69,6 +77,7 @@ class _CroppingImageViewState extends State<CroppingImageView> {
       builder: (BuildContext context, BoxConstraints constraints) {
         imageViewMaxHeight = constraints.maxHeight;
         return Container(
+          padding: EdgeInsets.all(10),
           color: widget.colorForWhiteSpace,
           child: Center(
             child: Image.memory(
@@ -79,6 +88,34 @@ class _CroppingImageViewState extends State<CroppingImageView> {
           ),
         );
       },
+    );
+  }
+
+  Widget showImageDarkFilter(state) {
+    var leftWidth = max<double>(leftTopDX + (widget.squareCircleSize! / 3), 0);
+    var topWidth = max<double>(leftTopDY + (widget.squareCircleSize! / 3), 0);
+    var rightWidth = max<double>(
+        deviceWidth - rightBottomDX - (widget.squareCircleSize! / 3), 0);
+    var bottomWidth = max<double>(
+        deviceHeight - rightBottomDY - (widget.squareCircleSize! / 3), 0);
+    return Visibility(
+      child: Positioned(
+        left: 0,
+        top: 0,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              left: BorderSide(width: leftWidth, color: Colors.black26),
+              top: BorderSide(width: topWidth, color: Colors.black26),
+              right: BorderSide(width: rightWidth, color: Colors.black26),
+              bottom: BorderSide(width: bottomWidth, color: Colors.black26),
+            ),
+          ),
+          width: deviceWidth,
+          height: deviceHeight,
+        ),
+      ),
+      visible: widget.makeDarkerOutside ?? true,
     );
   }
 
