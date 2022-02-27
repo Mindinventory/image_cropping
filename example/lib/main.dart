@@ -148,7 +148,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         defaultTextColor: AppColors.black,
         selectedTextColor: AppColors.orange,
         colorForWhiteSpace: AppColors.white,
-
       );
     }
   }

@@ -167,6 +167,9 @@ class _CroppingImageViewState extends State<CroppingImageView> {
         onPanUpdate: (details) {
           _buttonDrag(state, details, DragDirection.LEFT_TOP);
         },
+        onPanEnd: (details) {
+          _buttonDragEnd(state, details, DragDirection.LEFT_TOP);
+        },
       ),
     );
   }
@@ -188,6 +191,9 @@ class _CroppingImageViewState extends State<CroppingImageView> {
         ),
         onPanUpdate: (details) {
           _buttonDrag(state, details, DragDirection.LEFT_BOTTOM);
+        },
+        onPanEnd: (details) {
+          _buttonDragEnd(state, details, DragDirection.LEFT_BOTTOM);
         },
       ),
     );
@@ -211,6 +217,9 @@ class _CroppingImageViewState extends State<CroppingImageView> {
         onPanUpdate: (details) {
           _buttonDrag(state, details, DragDirection.RIGHT_TOP);
         },
+        onPanEnd: (details) {
+          _buttonDragEnd(state, details, DragDirection.RIGHT_TOP);
+        },
       ),
     );
   }
@@ -233,6 +242,9 @@ class _CroppingImageViewState extends State<CroppingImageView> {
         onPanUpdate: (details) {
           _buttonDrag(state, details, DragDirection.RIGHT_BOTTOM);
         },
+        onPanEnd: (details) {
+          _buttonDragEnd(state, details, DragDirection.RIGHT_BOTTOM);
+        },
       ),
     );
   }
@@ -251,7 +263,6 @@ class _CroppingImageViewState extends State<CroppingImageView> {
     double rightImageWidget = deviceWidth - (widget.isConstrain ?? true
         ? gapImageWidth + (widget.squareCircleSize! / 3)
         : -9);
-
     double topImageWidget = widget.isConstrain ?? true
         ? gapImageHeight - (widget.squareCircleSize! / 3)
         : -9;
@@ -277,6 +288,63 @@ class _CroppingImageViewState extends State<CroppingImageView> {
         _manageSquareDrag(state, details, dragDirection);
         break;
     }
+    state(() {});
+  }
+
+  void _buttonDragEnd(
+      state, DragEndDetails details, DragDirection dragDirection) {
+    gapImageWidth =
+        (deviceWidth - imageGlobalKey.currentContext!.size!.width) / 2;
+    gapImageHeight =
+        (imageViewMaxHeight - imageGlobalKey.currentContext!.size!.height) / 2;
+
+    double leftImageWidget = widget.isConstrain ?? true
+        ? gapImageWidth - (widget.squareCircleSize! / 3)
+        : -9;
+    double rightImageWidget = deviceWidth -
+        (widget.isConstrain ?? true
+            ? gapImageWidth + (widget.squareCircleSize! / 3)
+            : -9);
+
+    double topImageWidget = widget.isConstrain ?? true
+        ? gapImageHeight - (widget.squareCircleSize! / 3)
+        : -9;
+    double bottomImageWidget = imageViewMaxHeight -
+        (widget.isConstrain ?? true
+            ? gapImageHeight + (widget.squareCircleSize! / 3)
+            : -9);
+    rectImageWidget = Rect.fromLTRB(
+        leftImageWidget, topImageWidget, rightImageWidget, bottomImageWidget);
+
+    if (widget.isConstrain ?? true) {
+      leftTopDX = max<double>(leftImageWidget, leftTopDX);
+      leftTopDY = max<double>(topImageWidget, leftTopDY);
+      cropSizeWidth = max<double>(
+          min<double>(
+              cropSizeWidth, imageGlobalKey.currentContext!.size!.width),
+          0);
+      cropSizeHeight = max<double>(
+          min<double>(
+              cropSizeHeight, imageGlobalKey.currentContext!.size!.height),
+          0);
+
+      if (cropSizeWidth / currentRatioWidth >
+          cropSizeHeight / currentRatioHeight) {
+        cropSizeWidth = cropSizeHeight / currentRatioHeight * currentRatioWidth;
+      } else {
+        cropSizeHeight = cropSizeWidth / currentRatioWidth * currentRatioHeight;
+      }
+    }
+
+    SetImageRatio.setLeftTopCropButtonPosition(
+        leftTopDx: leftTopDX, leftTopDy: leftTopDY);
+    SetImageRatio.setLeftBottomCropButtonPosition(
+        leftBottomDx: leftTopDX, leftBottomDy: leftTopDY + cropSizeHeight);
+    SetImageRatio.setRightTopCropButtonPosition(
+        rightTopDx: leftTopDX + cropSizeWidth, rightTopDy: leftTopDY);
+    SetImageRatio.setRightBottomCropButtonPosition(
+        rightBottomDx: rightTopDX, rightBottomDy: rightTopDY + cropSizeHeight);
+
     state(() {});
   }
 
@@ -356,11 +424,7 @@ class _CroppingImageViewState extends State<CroppingImageView> {
       }
 
       if (cropSizeWidth < minCropSizeWidth ||
-              cropSizeHeight < minCropSizeHeight ||
-              leftTopDX + cropSizeWidth + widget.squareCircleSize! >
-                  stackGlobalKey.globalPaintBounds!
-                      .width // this condition checks the right top crop button is outside the screen.
-          ) {
+          cropSizeHeight < minCropSizeHeight) {
         cropSizeWidth = _previousCropWidth;
         cropSizeHeight = _previousCropHeight;
         leftTopDX = _previousLeftTopDX;
@@ -458,11 +522,7 @@ class _CroppingImageViewState extends State<CroppingImageView> {
             (leftBottomDX - _previousLeftBottomDX) * currentRatioHeight;
       }
       if (cropSizeWidth < minCropSizeWidth ||
-              cropSizeHeight < minCropSizeHeight ||
-              leftTopDX + cropSizeWidth + widget.squareCircleSize! >
-                  stackGlobalKey.globalPaintBounds!
-                      .width // this condition checks the right top crop button is outside the screen.
-          ) {
+          cropSizeHeight < minCropSizeHeight) {
         cropSizeWidth = _previousCropWidth;
         cropSizeHeight = _previousCropHeight;
         leftBottomDX = _previousLeftBottomDX;
@@ -559,10 +619,7 @@ class _CroppingImageViewState extends State<CroppingImageView> {
 
       // check crop size less than declared min crop size. then set to previous size.
       if (cropSizeWidth < minCropSizeWidth ||
-              cropSizeHeight < minCropSizeHeight ||
-              (rightTopDX - cropSizeWidth) <
-                  1 // this condition checks the left top crop button is outside the screen.
-          ) {
+          cropSizeHeight < minCropSizeHeight) {
         cropSizeWidth = _previousCropWidth;
         cropSizeHeight = _previousCropHeight;
         rightTopDX = _previousRightTopDX;
@@ -696,7 +753,7 @@ class _CroppingImageViewState extends State<CroppingImageView> {
 
     if (globalPositionDY < rectImageWidget.top) {
       globalPositionDY = rectImageWidget.top;
-    } else if (globalPositionDY + cropSizeHeight  > rectImageWidget.bottom) {
+    } else if (globalPositionDY + cropSizeHeight > rectImageWidget.bottom) {
       globalPositionDY = rectImageWidget.bottom - cropSizeHeight;
     }
 
