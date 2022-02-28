@@ -327,12 +327,13 @@ class _CroppingImageViewState extends State<CroppingImageView> {
           min<double>(
               cropSizeHeight, imageGlobalKey.currentContext!.size!.height),
           0);
-
-      if (cropSizeWidth / currentRatioWidth >
-          cropSizeHeight / currentRatioHeight) {
-        cropSizeWidth = cropSizeHeight / currentRatioHeight * currentRatioWidth;
-      } else {
-        cropSizeHeight = cropSizeWidth / currentRatioWidth * currentRatioHeight;
+      if(selectedImageRatio != ImageRatio.FREE){
+        if (cropSizeWidth / currentRatioWidth >
+            cropSizeHeight / currentRatioHeight) {
+          cropSizeWidth = cropSizeHeight / currentRatioHeight * currentRatioWidth;
+        } else {
+          cropSizeHeight = cropSizeWidth / currentRatioWidth * currentRatioHeight;
+        }
       }
     }
 
