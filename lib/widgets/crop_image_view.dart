@@ -319,14 +319,8 @@ class _CroppingImageViewState extends State<CroppingImageView> {
     if (widget.isConstrain ?? true) {
       leftTopDX = max<double>(leftImageWidget, leftTopDX);
       leftTopDY = max<double>(topImageWidget, leftTopDY);
-      cropSizeWidth = max<double>(
-          min<double>(
-              cropSizeWidth, imageGlobalKey.currentContext!.size!.width),
-          0);
-      cropSizeHeight = max<double>(
-          min<double>(
-              cropSizeHeight, imageGlobalKey.currentContext!.size!.height),
-          0);
+      cropSizeWidth = imageGlobalKey.currentContext!.size!.width.clamp(0, cropSizeWidth);
+      cropSizeHeight = imageGlobalKey.currentContext!.size!.height.clamp(0, cropSizeHeight);
       if(selectedImageRatio != ImageRatio.FREE){
         if (cropSizeWidth / currentRatioWidth >
             cropSizeHeight / currentRatioHeight) {
@@ -746,17 +740,8 @@ class _CroppingImageViewState extends State<CroppingImageView> {
     var globalPositionDX = details.globalPosition.dx - startedDX;
     var globalPositionDY = details.globalPosition.dy - startedDY;
 
-    if (globalPositionDX < rectImageWidget.left) {
-      globalPositionDX = rectImageWidget.left;
-    } else if (globalPositionDX + cropSizeWidth > rectImageWidget.right) {
-      globalPositionDX = rectImageWidget.right - cropSizeWidth;
-    }
-
-    if (globalPositionDY < rectImageWidget.top) {
-      globalPositionDY = rectImageWidget.top;
-    } else if (globalPositionDY + cropSizeHeight > rectImageWidget.bottom) {
-      globalPositionDY = rectImageWidget.bottom - cropSizeHeight;
-    }
+    globalPositionDX = globalPositionDX.clamp(rectImageWidget.left, rectImageWidget.right - cropSizeWidth);
+    globalPositionDY = globalPositionDY.clamp(rectImageWidget.top, rectImageWidget.bottom - cropSizeHeight);
 
     SetImageRatio.setLeftTopCropButtonPosition(
         leftTopDx: globalPositionDX, leftTopDy: globalPositionDY);
