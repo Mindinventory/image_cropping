@@ -740,6 +740,8 @@ class _CroppingImageViewState extends State<CroppingImageView> {
     var globalPositionDX = details.globalPosition.dx - startedDX;
     var globalPositionDY = details.globalPosition.dy - startedDY;
 
+    cropSizeWidth = cropSizeWidth.clamp(0, rectImageWidget.right - rectImageWidget.left);
+    cropSizeHeight = cropSizeHeight.clamp(0, rectImageWidget.bottom - rectImageWidget.top);
     globalPositionDX = globalPositionDX.clamp(rectImageWidget.left, rectImageWidget.right - cropSizeWidth);
     globalPositionDY = globalPositionDY.clamp(rectImageWidget.top, rectImageWidget.bottom - cropSizeHeight);
 
