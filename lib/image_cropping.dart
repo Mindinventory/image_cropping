@@ -37,29 +37,31 @@ class ImageCropping {
       VoidCallback? onImageStartLoading,
       VoidCallback? onImageEndLoading,
       ImageRatio selectedImageRatio = ImageRatio.FREE,
-      bool visibleOtherAspectRatios = true,
-      double squareBorderWidth = 2,
-      Color squareCircleColor = Colors.orange,
-      double squareCircleSize = 30,
-      Color defaultTextColor = Colors.black,
-      Color selectedTextColor = Colors.orange,
-      Color colorForWhiteSpace = Colors.white,
-      bool isConstrain = true,
-      bool makeDarkerOutside = true,
-      EdgeInsets? imageEdgeInsets = const EdgeInsets.all(10),
-      Key? key}) {
+        bool visibleOtherAspectRatios = true,
+        double squareBorderWidth = 2,
+        Color squareCircleColor = Colors.orange,
+        double squareCircleSize = 30,
+        Color defaultTextColor = Colors.black,
+        Color selectedTextColor = Colors.orange,
+        Color colorForWhiteSpace = Colors.white,
+        bool isConstrain = true,
+        bool makeDarkerOutside = true,
+        EdgeInsets? imageEdgeInsets = const EdgeInsets.all(10),
+        bool rootNavigator = false,
+        Key? key}) {
     /// Here, we are pushing a image cropping2 screen.
-    Navigator.of(context).push(
+    Navigator.of(context, rootNavigator: rootNavigator).push(
       MaterialPageRoute(
-        builder: (_context) => ImageCroppingScreen(
-          _context,
-          imageBytes,
-          onImageStartLoading,
-          onImageEndLoading,
-          onImageDoneListener,
-          colorForWhiteSpace,
-          selectedImageRatio: selectedImageRatio,
-          visibleOtherAspectRatios: visibleOtherAspectRatios,
+        builder: (_context) =>
+            ImageCroppingScreen(
+              _context,
+              imageBytes,
+              onImageStartLoading,
+              onImageEndLoading,
+              onImageDoneListener,
+              colorForWhiteSpace,
+              selectedImageRatio: selectedImageRatio,
+              visibleOtherAspectRatios: visibleOtherAspectRatios,
           squareCircleColor: squareCircleColor,
           squareBorderWidth: squareBorderWidth,
           squareCircleSize: squareCircleSize,
