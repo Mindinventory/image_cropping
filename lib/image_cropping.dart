@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image/image.dart' as Library;
 
 import 'common/compress_process.dart'
-    if (dart.library.html) 'common/compress_process_web.dart';
+if (dart.library.html) 'common/compress_process_web.dart';
 import 'constant/strings.dart';
 
 part 'common/set_image_ratio.dart';
@@ -29,39 +29,39 @@ part 'widgets/crop_image_view.dart';
 part 'widgets/cropping_button.dart';
 
 class ImageCropping {
-  static void cropImage(
-      {required BuildContext context,
-      required Uint8List imageBytes,
-      required Function(dynamic) onImageDoneListener,
-      VoidCallback? onImageStartLoading,
-      VoidCallback? onImageEndLoading,
-      ImageRatio selectedImageRatio = ImageRatio.FREE,
-      bool visibleOtherAspectRatios = true,
-      double squareBorderWidth = 2,
-      Color squareCircleColor = Colors.orange,
-      double squareCircleSize = 30,
-      Color defaultTextColor = Colors.black,
-      Color selectedTextColor = Colors.orange,
-      Color colorForWhiteSpace = Colors.white,
-      Key? key}) {
+  static Future<dynamic> cropImage({required BuildContext context,
+    required Uint8List imageBytes,
+    required Function(dynamic) onImageDoneListener,
+    VoidCallback? onImageStartLoading,
+    VoidCallback? onImageEndLoading,
+    ImageRatio selectedImageRatio = ImageRatio.FREE,
+    bool visibleOtherAspectRatios = true,
+    double squareBorderWidth = 2,
+    Color squareCircleColor = Colors.orange,
+    double squareCircleSize = 30,
+    Color defaultTextColor = Colors.black,
+    Color selectedTextColor = Colors.orange,
+    Color colorForWhiteSpace = Colors.white,
+    Key? key}) {
     /// Here, we are pushing a image cropping2 screen.
-    Navigator.of(context).push(
+    return Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_context) => ImageCroppingScreen(
-          _context,
-          imageBytes,
-          onImageStartLoading,
-          onImageEndLoading,
-          onImageDoneListener,
-          colorForWhiteSpace,
-          selectedImageRatio: selectedImageRatio,
-          visibleOtherAspectRatios: visibleOtherAspectRatios,
-          squareCircleColor: squareCircleColor,
-          squareBorderWidth: squareBorderWidth,
-          squareCircleSize: squareCircleSize,
-          defaultTextColor: defaultTextColor,
-          selectedTextColor: selectedTextColor,
-        ),
+        builder: (_context) =>
+            ImageCroppingScreen(
+              _context,
+              imageBytes,
+              onImageStartLoading,
+              onImageEndLoading,
+              onImageDoneListener,
+              colorForWhiteSpace,
+              selectedImageRatio: selectedImageRatio,
+              visibleOtherAspectRatios: visibleOtherAspectRatios,
+              squareCircleColor: squareCircleColor,
+              squareBorderWidth: squareBorderWidth,
+              squareCircleSize: squareCircleSize,
+              defaultTextColor: defaultTextColor,
+              selectedTextColor: selectedTextColor,
+            ),
       ),
     );
   }
@@ -110,21 +110,20 @@ class ImageCroppingScreen extends StatefulWidget {
   /// This property contains Header menu icon size
   double headerMenuSize = 30;
 
-  ImageCroppingScreen(
-      this._context,
+  ImageCroppingScreen(this._context,
       Uint8List _imageBytes,
       this._onImageStartLoading,
       this._onImageEndLoading,
       this._onImageDoneListener,
       this._colorForWhiteSpace,
       {required this.selectedImageRatio,
-      required this.visibleOtherAspectRatios,
-      required this.squareBorderWidth,
-      required this.squareCircleColor,
-      required this.defaultTextColor,
-      required this.selectedTextColor,
-      required this.squareCircleSize,
-      Key? key})
+        required this.visibleOtherAspectRatios,
+        required this.squareBorderWidth,
+        required this.squareCircleColor,
+        required this.defaultTextColor,
+        required this.selectedTextColor,
+        required this.squareCircleSize,
+        Key? key})
       : super(key: key) {
     process = ImageProcess(_imageBytes);
   }
@@ -183,7 +182,7 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
                           selectedImageRatio: widget.selectedImageRatio,
                           selectedTextColor: widget.selectedTextColor,
                           visibleOtherAspectRatios:
-                              widget.visibleOtherAspectRatios,
+                          widget.visibleOtherAspectRatios,
                         ),
                       ],
                     ),
@@ -195,7 +194,7 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
         },
       );
     } else {
-      return Container();
+      return const Center(child: CircularProgressIndicator());
     }
   }
 
@@ -224,8 +223,14 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
 
   /// set device width & height
   void _setDeviceHeightWidth() {
-    deviceWidth = MediaQuery.of(widget._context).size.width;
-    deviceHeight = MediaQuery.of(widget._context).size.height;
+    deviceWidth = MediaQuery
+        .of(widget._context)
+        .size
+        .width;
+    deviceHeight = MediaQuery
+        .of(widget._context)
+        .size
+        .height;
   }
 
   /// set image width & height.
@@ -245,7 +250,9 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
 
   /// set orientation for landscape and portrait mode.
   void _setOrientation() {
-    Orientation currentOrientation = MediaQuery.of(context).orientation;
+    Orientation currentOrientation = MediaQuery
+        .of(context)
+        .orientation;
     if (currentOrientation == Orientation.landscape) {
       _setDeviceHeightWidth();
       SetImageRatio.setDefaultButtonPosition();

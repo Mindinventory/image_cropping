@@ -148,7 +148,7 @@ class _CroppingButtonState extends State<CroppingButton> {
         libraryImage = image;
         widget.imageLoadingFinished?.call();
         widget.onImageDoneListener(bytes);
-        Navigator.pop(widget.context);
+        Navigator.pop(widget.context, bytes);
       },
     );
   }
