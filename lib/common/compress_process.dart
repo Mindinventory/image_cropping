@@ -6,8 +6,9 @@ import 'package:image/image.dart' as Library;
 class ImageProcess {
   /// image bytes which will be of user's picked image.
   Uint8List imageBytes;
+  final int encodingQuality;
 
-  ImageProcess(this.imageBytes);
+  ImageProcess(this.imageBytes, {required this.encodingQuality});
 
   /// compressed image is shown for user's reference
   void compress(Function() onBytesLoaded,
@@ -36,7 +37,7 @@ class ImageProcess {
     final _libraryUInt8List = Uint8List.fromList(
       Library.encodeJpg(
         libraryImage,
-        quality: 100,
+        quality: encodingQuality,
       ),
     );
     onImageLoaded.call(libraryImage, _libraryUInt8List);
