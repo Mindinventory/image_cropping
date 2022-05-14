@@ -36,31 +36,45 @@ This plugin supports cropping and rotating images for multiplatform. It Allow in
 ![Image Plugin](https://github.com/Mindinventory/image_cropping/blob/master/assets/image_plugin_3.gif)
 
 ## Installation
-If you are targeting web, don't forget to add worker.js, worker.js.deps, worker.js.map in your project's root directory.
+If you are targeting web, don't forget to add worker.js in your project's root directory.
+
+You can also add worker.js.deps and worker.js.map but they are optional and only used for development.
+
+These 3 files are generated when running the following command in the example folder:
+``` bash
+dart compile js -O1 -o web/worker.js lib/worker.dart
+```
+For more details on the command, check [this link](https://dart.dev/tools/dart2js).
+It converts the dart code to JS, which will then be run in a web worker.
 
 ### Example
-    ImageCropper.cropImage(
-      context,
-      imageBytes!,
-      () {
+``` dart
+final croppedBytes = await ImageCropping.cropImage(
+    context: context,
+    imageBytes: bytes,
+    onImageStartLoading: () {
         showLoader();
-      },
-      () {
+    },
+    onImageEndLoading: () {
         hideLoader();
-      },
-      (data) {
+    },
+    onImageDoneListener: (data) {
+        // You can also use a listener instead of awaiting the function
         setState(() {
-          imageBytes = data;
+        imageBytes = data;
         });
-      },
-      selectedImageRatio: ImageRatio.RATIO_1_1,
-      visibleOtherAspectRatios: true,
-      squareBorderWidth: 2,
-      squareCircleColor: Colors.black,
-      defaultTextColor: Colors.orange,
-      selectedTextColor: Colors.black,
-      colorForWhiteSpace: Colors.grey,
-    );
+    },
+    selectedImageRatio: ImageRatio.RATIO_1_1,
+    visibleOtherAspectRatios: true,
+    squareBorderWidth: 2,
+    squareCircleColor: Colors.black,
+    defaultTextColor: Colors.orange,
+    selectedTextColor: Colors.black,
+    colorForWhiteSpace: Colors.grey,
+    encodingQuality: 80,
+    workerPath: 'crop_worker.js',
+);
+```
 
 ### Required parameters
 
@@ -102,6 +116,13 @@ This property contains Color value. By passing this property you can set aspect 
 ##### colorForWhiteSpace:
 This property contains Color value. By passing this property you can set background color, if screen contains blank space.
 
+##### encodingQuality
+Set the encodingQuality of the cropped image. Defaults to 100 (max).
+High quality involves bigger image file size.
+
+##### workerPath
+You may want to change the worker.js name, especially if you use other web workers and you already have a worker.js file.
+Defaults to 'worker.js'.
 
 ## Note:
 For flutter web, copy worker.js from example folder to the project, else it will not work.

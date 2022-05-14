@@ -37,7 +37,7 @@ void main() {
       final _libraryUInt8List = Uint8List.fromList(
         Library.encodeJpg(
           libraryImage,
-          quality: 100,
+          quality: arguments[8],
         ),
       );
       self.postMessage([libraryImage.getBytes(), _libraryUInt8List]);

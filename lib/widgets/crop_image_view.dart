@@ -562,7 +562,6 @@ class _CroppingImageViewState extends State<CroppingImageView> {
               (rightTopDX - cropSizeWidth) <
                   1 // this condition checks the left top crop button is outside the screen.
           ) {
-        print("size: previous default");
         cropSizeWidth = _previousCropWidth;
         cropSizeHeight = _previousCropHeight;
         rightBottomDX = _previousRightBottomDX;

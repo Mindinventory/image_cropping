@@ -8,11 +8,15 @@ class ImageProcess {
   /// web worker to do multithreaded computation.
   late final html.Worker worker;
 
+  /// JPEG encoding quality, not used yet
+  final int encodingQuality;
+
   /// image bytes which will be of user's picked image.
   Uint8List imageBytes;
 
-  ImageProcess(this.imageBytes) {
-    worker = html.Worker('worker.js');
+  ImageProcess(this.imageBytes,
+      {required this.encodingQuality, String? workerPath}) {
+    worker = html.Worker(workerPath ?? 'worker.js');
   }
 
   /// compressed image is shown for user's reference
@@ -46,6 +50,7 @@ class ImageProcess {
       imageCropY,
       imageCropWidth,
       imageCropHeight,
+      encodingQuality,
     ]);
     final event = await worker.onMessage.first;
     onImageLoaded.call(
