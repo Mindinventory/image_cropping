@@ -29,7 +29,7 @@ part 'widgets/crop_image_view.dart';
 part 'widgets/cropping_button.dart';
 
 class ImageCropping {
-  static void cropImage(
+  static Future<dynamic> cropImage(
       {required BuildContext context,
       required Uint8List imageBytes,
       required Function(dynamic) onImageDoneListener,
@@ -43,25 +43,28 @@ class ImageCropping {
       Color defaultTextColor = Colors.black,
       Color selectedTextColor = Colors.orange,
       Color colorForWhiteSpace = Colors.white,
+      int encodingQuality = 100,
+      String? workerPath,
       Key? key}) {
     /// Here, we are pushing a image cropping2 screen.
-    Navigator.of(context).push(
+    return Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_context) => ImageCroppingScreen(
-          _context,
-          imageBytes,
-          onImageStartLoading,
-          onImageEndLoading,
-          onImageDoneListener,
-          colorForWhiteSpace,
-          selectedImageRatio: selectedImageRatio,
-          visibleOtherAspectRatios: visibleOtherAspectRatios,
-          squareCircleColor: squareCircleColor,
-          squareBorderWidth: squareBorderWidth,
-          squareCircleSize: squareCircleSize,
-          defaultTextColor: defaultTextColor,
-          selectedTextColor: selectedTextColor,
-        ),
+            _context,
+            imageBytes,
+            onImageStartLoading,
+            onImageEndLoading,
+            onImageDoneListener,
+            colorForWhiteSpace,
+            selectedImageRatio: selectedImageRatio,
+            visibleOtherAspectRatios: visibleOtherAspectRatios,
+            squareCircleColor: squareCircleColor,
+            squareBorderWidth: squareBorderWidth,
+            squareCircleSize: squareCircleSize,
+            defaultTextColor: defaultTextColor,
+            selectedTextColor: selectedTextColor,
+            encodingQuality: encodingQuality,
+            workerPath: workerPath),
       ),
     );
   }
@@ -110,6 +113,13 @@ class ImageCroppingScreen extends StatefulWidget {
   /// This property contains Header menu icon size
   double headerMenuSize = 30;
 
+  /// JPEG encoding quality of the cropped image (between 0 and 100, with 100 being the best quality)
+  int encodingQuality;
+
+  /// Path to your worker js file. You may want to rename it if you use several
+  /// workers. Will use 'worker.js' if nothing specified.
+  String? workerPath;
+
   ImageCroppingScreen(
       this._context,
       Uint8List _imageBytes,
@@ -124,9 +134,15 @@ class ImageCroppingScreen extends StatefulWidget {
       required this.defaultTextColor,
       required this.selectedTextColor,
       required this.squareCircleSize,
+      this.encodingQuality = 100,
+      this.workerPath,
       Key? key})
       : super(key: key) {
-    process = ImageProcess(_imageBytes);
+    process = ImageProcess(
+      _imageBytes,
+      encodingQuality: encodingQuality,
+      workerPath: workerPath,
+    );
   }
 
   @override
@@ -195,7 +211,7 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
         },
       );
     } else {
-      return Container();
+      return const Center(child: CircularProgressIndicator());
     }
   }
 
