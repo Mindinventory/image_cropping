@@ -104,6 +104,7 @@ This property contains Color value. By passing this property you can set backgro
 
 
 ## Note:
+For flutter web, copy worker.js from example folder to the project, else it will not work.
 The result returns in Uint8List. so it can be lost later, you are responsible for storing it somewhere permanent (if needed).
 
 ## Guideline for contributors
