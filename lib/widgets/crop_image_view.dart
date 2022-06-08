@@ -19,11 +19,19 @@ class CroppingImageView extends StatefulWidget {
 
   final state;
 
+  final bool? makeDarkerOutside;
+  final bool? isConstrain;
+
+  final EdgeInsets? imageEdgeInsets;
+
   const CroppingImageView({
     this.colorForWhiteSpace,
     this.squareCircleSize,
     this.squareBorderWidth,
     this.squareCircleColor,
+    this.imageEdgeInsets,
+    this.makeDarkerOutside,
+    this.isConstrain,
     this.state,
     Key? key,
   }) : super(key: key);
@@ -40,8 +48,11 @@ class _CroppingImageViewState extends State<CroppingImageView> {
         child: Stack(
           key: stackGlobalKey,
           children: [
+
             /// Showing image in screen
             loadImage(),
+
+            showImageDarkFilter(widget.state),
 
             /// Showing border of crop view.
             showImageCropButtonsBorder(widget.state),
@@ -69,6 +80,7 @@ class _CroppingImageViewState extends State<CroppingImageView> {
       builder: (BuildContext context, BoxConstraints constraints) {
         imageViewMaxHeight = constraints.maxHeight;
         return Container(
+          padding: widget.imageEdgeInsets,
           color: widget.colorForWhiteSpace,
           child: Center(
             child: Image.memory(
@@ -79,6 +91,34 @@ class _CroppingImageViewState extends State<CroppingImageView> {
           ),
         );
       },
+    );
+  }
+
+  Widget showImageDarkFilter(state) {
+    var leftWidth = max<double>(leftTopDX + (widget.squareCircleSize! / 3), 0);
+    var topWidth = max<double>(leftTopDY + (widget.squareCircleSize! / 3), 0);
+    var rightWidth = max<double>(
+        deviceWidth - rightBottomDX - (widget.squareCircleSize! / 3), 0);
+    var bottomWidth = max<double>(
+        deviceHeight - rightBottomDY - (widget.squareCircleSize! / 3), 0);
+    return Visibility(
+      child: Positioned(
+        left: 0,
+        top: 0,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              left: BorderSide(width: leftWidth, color: Colors.black26),
+              top: BorderSide(width: topWidth, color: Colors.black26),
+              right: BorderSide(width: rightWidth, color: Colors.black26),
+              bottom: BorderSide(width: bottomWidth, color: Colors.black26),
+            ),
+          ),
+          width: deviceWidth,
+          height: deviceHeight,
+        ),
+      ),
+      visible: widget.makeDarkerOutside ?? true,
     );
   }
 
@@ -115,14 +155,20 @@ class _CroppingImageViewState extends State<CroppingImageView> {
       left: leftTopDX,
       top: leftTopDY,
       child: GestureDetector(
-        child: CircleAvatar(
+        child: Container(
           key: leftTopGlobalKey,
-          radius: 10,
-          child: Container(),
-          backgroundColor: widget.squareCircleColor,
+          decoration: BoxDecoration(
+            color: widget.squareCircleColor,
+            shape: BoxShape.circle,
+          ),
+          width: 20,
+          height: 20,
         ),
         onPanUpdate: (details) {
           _buttonDrag(state, details, DragDirection.LEFT_TOP);
+        },
+        onPanEnd: (details) {
+          _buttonDragEnd(state, details, DragDirection.LEFT_TOP);
         },
       ),
     );
@@ -134,14 +180,20 @@ class _CroppingImageViewState extends State<CroppingImageView> {
       left: leftBottomDX,
       top: leftBottomDY,
       child: GestureDetector(
-        child: CircleAvatar(
+        child: Container(
           key: leftBottomGlobalKey,
-          radius: 10,
-          child: Container(),
-          backgroundColor: widget.squareCircleColor,
+          decoration: BoxDecoration(
+            color: widget.squareCircleColor,
+            shape: BoxShape.circle,
+          ),
+          width: 20,
+          height: 20,
         ),
         onPanUpdate: (details) {
           _buttonDrag(state, details, DragDirection.LEFT_BOTTOM);
+        },
+        onPanEnd: (details) {
+          _buttonDragEnd(state, details, DragDirection.LEFT_BOTTOM);
         },
       ),
     );
@@ -153,14 +205,20 @@ class _CroppingImageViewState extends State<CroppingImageView> {
       left: rightTopDX,
       top: rightTopDY,
       child: GestureDetector(
-        child: CircleAvatar(
+        child: Container(
           key: rightTopGlobalKey,
-          radius: 10,
-          child: Container(),
-          backgroundColor: widget.squareCircleColor,
+          decoration: BoxDecoration(
+            color: widget.squareCircleColor,
+            shape: BoxShape.circle,
+          ),
+          width: 20,
+          height: 20,
         ),
         onPanUpdate: (details) {
           _buttonDrag(state, details, DragDirection.RIGHT_TOP);
+        },
+        onPanEnd: (details) {
+          _buttonDragEnd(state, details, DragDirection.RIGHT_TOP);
         },
       ),
     );
@@ -172,14 +230,20 @@ class _CroppingImageViewState extends State<CroppingImageView> {
       left: rightBottomDX,
       top: rightBottomDY,
       child: GestureDetector(
-        child: CircleAvatar(
+        child: Container(
           key: rightBottomGlobalKey,
-          radius: 10,
-          child: Container(),
-          backgroundColor: widget.squareCircleColor,
+          decoration: BoxDecoration(
+            color: widget.squareCircleColor,
+            shape: BoxShape.circle,
+          ),
+          width: 20,
+          height: 20,
         ),
         onPanUpdate: (details) {
           _buttonDrag(state, details, DragDirection.RIGHT_BOTTOM);
+        },
+        onPanEnd: (details) {
+          _buttonDragEnd(state, details, DragDirection.RIGHT_BOTTOM);
         },
       ),
     );
@@ -188,17 +252,94 @@ class _CroppingImageViewState extends State<CroppingImageView> {
   /// Update button or square position on drag and update the UI.
   void _buttonDrag(
       state, DragUpdateDetails details, DragDirection dragDirection) {
-    if (dragDirection == DragDirection.LEFT_TOP) {
-      _manageLeftTopButtonDrag(state, details, dragDirection);
-    } else if (dragDirection == DragDirection.LEFT_BOTTOM) {
-      _manageLeftBottomButtonDrag(state, details, dragDirection);
-    } else if (dragDirection == DragDirection.RIGHT_TOP) {
-      _manageRightTopButtonDrag(state, details, dragDirection);
-    } else if (dragDirection == DragDirection.RIGHT_BOTTOM) {
-      _manageRightBottomButtonDrag(state, details, dragDirection);
-    } else if (dragDirection == DragDirection.ALL) {
-      _manageSquareDrag(state, details, dragDirection);
+    gapImageWidth =
+        (deviceWidth - imageGlobalKey.currentContext!.size!.width) / 2;
+    gapImageHeight =
+        (imageViewMaxHeight - imageGlobalKey.currentContext!.size!.height) / 2;
+
+    double leftImageWidget = widget.isConstrain ?? true
+        ? gapImageWidth - (widget.squareCircleSize! / 3)
+        : -9;
+    double rightImageWidget = deviceWidth - (widget.isConstrain ?? true
+        ? gapImageWidth + (widget.squareCircleSize! / 3)
+        : -9);
+    double topImageWidget = widget.isConstrain ?? true
+        ? gapImageHeight - (widget.squareCircleSize! / 3)
+        : -9;
+    double bottomImageWidget = imageViewMaxHeight - (widget.isConstrain ?? true
+        ? gapImageHeight + (widget.squareCircleSize! / 3)
+        : -9);
+    rectImageWidget = Rect.fromLTRB(leftImageWidget, topImageWidget, rightImageWidget, bottomImageWidget);
+
+    switch (dragDirection) {
+      case DragDirection.LEFT_TOP:
+        _manageLeftTopButtonDrag(state, details, dragDirection);
+        break;
+      case DragDirection.LEFT_BOTTOM:
+        _manageLeftBottomButtonDrag(state, details, dragDirection);
+        break;
+      case DragDirection.RIGHT_TOP:
+        _manageRightTopButtonDrag(state, details, dragDirection);
+        break;
+      case DragDirection.RIGHT_BOTTOM:
+        _manageRightBottomButtonDrag(state, details, dragDirection);
+        break;
+      case DragDirection.ALL:
+        _manageSquareDrag(state, details, dragDirection);
+        break;
     }
+    state(() {});
+  }
+
+  void _buttonDragEnd(
+      state, DragEndDetails details, DragDirection dragDirection) {
+    gapImageWidth =
+        (deviceWidth - imageGlobalKey.currentContext!.size!.width) / 2;
+    gapImageHeight =
+        (imageViewMaxHeight - imageGlobalKey.currentContext!.size!.height) / 2;
+
+    double leftImageWidget = widget.isConstrain ?? true
+        ? gapImageWidth - (widget.squareCircleSize! / 3)
+        : -9;
+    double rightImageWidget = deviceWidth -
+        (widget.isConstrain ?? true
+            ? gapImageWidth + (widget.squareCircleSize! / 3)
+            : -9);
+
+    double topImageWidget = widget.isConstrain ?? true
+        ? gapImageHeight - (widget.squareCircleSize! / 3)
+        : -9;
+    double bottomImageWidget = imageViewMaxHeight -
+        (widget.isConstrain ?? true
+            ? gapImageHeight + (widget.squareCircleSize! / 3)
+            : -9);
+    rectImageWidget = Rect.fromLTRB(
+        leftImageWidget, topImageWidget, rightImageWidget, bottomImageWidget);
+
+    if (widget.isConstrain ?? true) {
+      leftTopDX = max<double>(leftImageWidget, leftTopDX);
+      leftTopDY = max<double>(topImageWidget, leftTopDY);
+      cropSizeWidth = imageGlobalKey.currentContext!.size!.width.clamp(0, cropSizeWidth);
+      cropSizeHeight = imageGlobalKey.currentContext!.size!.height.clamp(0, cropSizeHeight);
+      if(selectedImageRatio != ImageRatio.FREE){
+        if (cropSizeWidth / currentRatioWidth >
+            cropSizeHeight / currentRatioHeight) {
+          cropSizeWidth = cropSizeHeight / currentRatioHeight * currentRatioWidth;
+        } else {
+          cropSizeHeight = cropSizeWidth / currentRatioWidth * currentRatioHeight;
+        }
+      }
+    }
+
+    SetImageRatio.setLeftTopCropButtonPosition(
+        leftTopDx: leftTopDX, leftTopDy: leftTopDY);
+    SetImageRatio.setLeftBottomCropButtonPosition(
+        leftBottomDx: leftTopDX, leftBottomDy: leftTopDY + cropSizeHeight);
+    SetImageRatio.setRightTopCropButtonPosition(
+        rightTopDx: leftTopDX + cropSizeWidth, rightTopDy: leftTopDY);
+    SetImageRatio.setRightBottomCropButtonPosition(
+        rightBottomDx: rightTopDX, rightBottomDy: rightTopDY + cropSizeHeight);
+
     state(() {});
   }
 
@@ -218,6 +359,12 @@ class _CroppingImageViewState extends State<CroppingImageView> {
     var _previousCropWidth = cropSizeWidth;
     var _previousCropHeight = cropSizeHeight;
 
+    if (globalPositionDX < rectImageWidget.left) {
+      globalPositionDX = rectImageWidget.left;
+    }
+    if (globalPositionDY < rectImageWidget.top) {
+      globalPositionDY = rectImageWidget.top;
+    }
     leftTopDX = globalPositionDX;
     leftTopDY = globalPositionDY;
 
@@ -272,11 +419,7 @@ class _CroppingImageViewState extends State<CroppingImageView> {
       }
 
       if (cropSizeWidth < minCropSizeWidth ||
-              cropSizeHeight < minCropSizeHeight ||
-              leftTopDX + cropSizeWidth + widget.squareCircleSize! >
-                  stackGlobalKey.globalPaintBounds!
-                      .width // this condition checks the right top crop button is outside the screen.
-          ) {
+          cropSizeHeight < minCropSizeHeight) {
         cropSizeWidth = _previousCropWidth;
         cropSizeHeight = _previousCropHeight;
         leftTopDX = _previousLeftTopDX;
@@ -309,6 +452,13 @@ class _CroppingImageViewState extends State<CroppingImageView> {
     var _previousLeftBottomDY = leftBottomDY;
     var _previousCropWidth = cropSizeWidth;
     var _previousCropHeight = cropSizeHeight;
+
+    if (globalPositionDX < rectImageWidget.left) {
+      globalPositionDX = rectImageWidget.left;
+    }
+    if (globalPositionDY > rectImageWidget.bottom) {
+      globalPositionDY = rectImageWidget.bottom;
+    }
 
     leftBottomDX = globalPositionDX;
     leftBottomDY = globalPositionDY;
@@ -367,11 +517,7 @@ class _CroppingImageViewState extends State<CroppingImageView> {
             (leftBottomDX - _previousLeftBottomDX) * currentRatioHeight;
       }
       if (cropSizeWidth < minCropSizeWidth ||
-              cropSizeHeight < minCropSizeHeight ||
-              leftTopDX + cropSizeWidth + widget.squareCircleSize! >
-                  stackGlobalKey.globalPaintBounds!
-                      .width // this condition checks the right top crop button is outside the screen.
-          ) {
+          cropSizeHeight < minCropSizeHeight) {
         cropSizeWidth = _previousCropWidth;
         cropSizeHeight = _previousCropHeight;
         leftBottomDX = _previousLeftBottomDX;
@@ -403,6 +549,13 @@ class _CroppingImageViewState extends State<CroppingImageView> {
     var _previousRightTopDY = rightTopDY;
     var _previousCropWidth = cropSizeWidth;
     var _previousCropHeight = cropSizeHeight;
+
+    if (globalPositionDX > rectImageWidget.right) {
+      globalPositionDX = rectImageWidget.right;
+    }
+    if (globalPositionDY < rectImageWidget.top) {
+      globalPositionDY = rectImageWidget.top;
+    }
 
     rightTopDX = globalPositionDX;
     rightTopDY = globalPositionDY;
@@ -461,10 +614,7 @@ class _CroppingImageViewState extends State<CroppingImageView> {
 
       // check crop size less than declared min crop size. then set to previous size.
       if (cropSizeWidth < minCropSizeWidth ||
-              cropSizeHeight < minCropSizeHeight ||
-              (rightTopDX - cropSizeWidth) <
-                  1 // this condition checks the left top crop button is outside the screen.
-          ) {
+          cropSizeHeight < minCropSizeHeight) {
         cropSizeWidth = _previousCropWidth;
         cropSizeHeight = _previousCropHeight;
         rightTopDX = _previousRightTopDX;
@@ -498,6 +648,13 @@ class _CroppingImageViewState extends State<CroppingImageView> {
     var _previousRightBottomDY = rightBottomDY;
     var _previousCropWidth = cropSizeWidth;
     var _previousCropHeight = cropSizeHeight;
+
+    if (globalPositionDX > rectImageWidget.right) {
+      globalPositionDX = rectImageWidget.right;
+    }
+    if (globalPositionDY > rectImageWidget.bottom) {
+      globalPositionDY = rectImageWidget.bottom;
+    }
 
     rightBottomDX = globalPositionDX;
     rightBottomDY = globalPositionDY;
@@ -558,10 +715,7 @@ class _CroppingImageViewState extends State<CroppingImageView> {
 
       // check crop size less than declared min crop size. then set to previous size.
       if (cropSizeWidth < minCropSizeWidth ||
-              cropSizeHeight < minCropSizeHeight ||
-              (rightTopDX - cropSizeWidth) <
-                  1 // this condition checks the left top crop button is outside the screen.
-          ) {
+              cropSizeHeight < minCropSizeHeight) {
         print("size: previous default");
         cropSizeWidth = _previousCropWidth;
         cropSizeHeight = _previousCropHeight;
@@ -586,17 +740,11 @@ class _CroppingImageViewState extends State<CroppingImageView> {
     var globalPositionDX = details.globalPosition.dx - startedDX;
     var globalPositionDY = details.globalPosition.dy - startedDY;
 
-    if (globalPositionDX < -9 ||
-        (globalPositionDX + cropSizeWidth + (widget.squareCircleSize! / 5)) >
-            MediaQuery.of(context).size.width) {
-      globalPositionDX = leftTopDX;
-    }
+    cropSizeWidth = cropSizeWidth.clamp(0, rectImageWidget.right - rectImageWidget.left);
+    cropSizeHeight = cropSizeHeight.clamp(0, rectImageWidget.bottom - rectImageWidget.top);
+    globalPositionDX = globalPositionDX.clamp(rectImageWidget.left, rectImageWidget.right - cropSizeWidth);
+    globalPositionDY = globalPositionDY.clamp(rectImageWidget.top, rectImageWidget.bottom - cropSizeHeight);
 
-    if (globalPositionDY < -9 ||
-        (globalPositionDY + cropSizeHeight + (widget.squareCircleSize! / 5)) >
-            imageViewMaxHeight) {
-      globalPositionDY = leftTopDY;
-    }
     SetImageRatio.setLeftTopCropButtonPosition(
         leftTopDx: globalPositionDX, leftTopDy: globalPositionDY);
     SetImageRatio.setLeftBottomCropButtonPosition(

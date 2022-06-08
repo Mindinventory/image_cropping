@@ -1,5 +1,6 @@
 library image_cropping;
 
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -36,31 +37,39 @@ class ImageCropping {
       VoidCallback? onImageStartLoading,
       VoidCallback? onImageEndLoading,
       ImageRatio selectedImageRatio = ImageRatio.FREE,
-      bool visibleOtherAspectRatios = true,
-      double squareBorderWidth = 2,
-      Color squareCircleColor = Colors.orange,
-      double squareCircleSize = 30,
-      Color defaultTextColor = Colors.black,
-      Color selectedTextColor = Colors.orange,
-      Color colorForWhiteSpace = Colors.white,
-      Key? key}) {
+        bool visibleOtherAspectRatios = true,
+        double squareBorderWidth = 2,
+        Color squareCircleColor = Colors.orange,
+        double squareCircleSize = 30,
+        Color defaultTextColor = Colors.black,
+        Color selectedTextColor = Colors.orange,
+        Color colorForWhiteSpace = Colors.white,
+        bool isConstrain = true,
+        bool makeDarkerOutside = true,
+        EdgeInsets? imageEdgeInsets = const EdgeInsets.all(10),
+        bool rootNavigator = false,
+        Key? key}) {
     /// Here, we are pushing a image cropping2 screen.
-    Navigator.of(context).push(
+    Navigator.of(context, rootNavigator: rootNavigator).push(
       MaterialPageRoute(
-        builder: (_context) => ImageCroppingScreen(
-          _context,
-          imageBytes,
-          onImageStartLoading,
-          onImageEndLoading,
-          onImageDoneListener,
-          colorForWhiteSpace,
-          selectedImageRatio: selectedImageRatio,
-          visibleOtherAspectRatios: visibleOtherAspectRatios,
+        builder: (_context) =>
+            ImageCroppingScreen(
+              _context,
+              imageBytes,
+              onImageStartLoading,
+              onImageEndLoading,
+              onImageDoneListener,
+              colorForWhiteSpace,
+              selectedImageRatio: selectedImageRatio,
+              visibleOtherAspectRatios: visibleOtherAspectRatios,
           squareCircleColor: squareCircleColor,
           squareBorderWidth: squareBorderWidth,
           squareCircleSize: squareCircleSize,
           defaultTextColor: defaultTextColor,
           selectedTextColor: selectedTextColor,
+          isConstrain : isConstrain,
+          makeDarkerOutside : makeDarkerOutside,
+          imageEdgeInsets : imageEdgeInsets,
         ),
       ),
     );
@@ -110,6 +119,15 @@ class ImageCroppingScreen extends StatefulWidget {
   /// This property contains Header menu icon size
   double headerMenuSize = 30;
 
+  /// This property is inner insets of image
+  EdgeInsets? imageEdgeInsets;
+
+  /// This property makes SquareCircle can't go outside of image
+  bool isConstrain;
+
+  /// This property makes square's outside darker
+  bool makeDarkerOutside;
+
   ImageCroppingScreen(
       this._context,
       Uint8List _imageBytes,
@@ -124,6 +142,9 @@ class ImageCroppingScreen extends StatefulWidget {
       required this.defaultTextColor,
       required this.selectedTextColor,
       required this.squareCircleSize,
+      required this.isConstrain,
+      required this.makeDarkerOutside,
+      required this.imageEdgeInsets,
       Key? key})
       : super(key: key) {
     process = ImageProcess(_imageBytes);
@@ -176,6 +197,9 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
                           colorForWhiteSpace: widget._colorForWhiteSpace,
                           squareBorderWidth: widget.squareBorderWidth,
                           squareCircleColor: widget.squareCircleColor,
+                          makeDarkerOutside: widget.makeDarkerOutside,
+                          isConstrain: widget.isConstrain,
+                          imageEdgeInsets: widget.imageEdgeInsets,
                         ),
                         ShowCropImageRatios(
                           state: state,
