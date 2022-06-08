@@ -3,12 +3,12 @@ library image_cropping;
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as Library;
 
-import 'common/compress_process.dart'
-    if (dart.library.html) 'common/compress_process_web.dart';
+import 'common/compress_process.dart' if (dart.library.html) 'common/compress_process_web.dart';
 import 'constant/strings.dart';
 
 part 'common/set_image_ratio.dart';
@@ -36,40 +36,41 @@ class ImageCropping {
       required Function(dynamic) onImageDoneListener,
       VoidCallback? onImageStartLoading,
       VoidCallback? onImageEndLoading,
-      ImageRatio selectedImageRatio = ImageRatio.FREE,
-        bool visibleOtherAspectRatios = true,
-        double squareBorderWidth = 2,
-        Color squareCircleColor = Colors.orange,
-        double squareCircleSize = 30,
-        Color defaultTextColor = Colors.black,
-        Color selectedTextColor = Colors.orange,
-        Color colorForWhiteSpace = Colors.white,
-        bool isConstrain = true,
-        bool makeDarkerOutside = true,
-        EdgeInsets? imageEdgeInsets = const EdgeInsets.all(10),
-        bool rootNavigator = false,
-        Key? key}) {
+      CropAspectRatio? selectedImageRatio,
+      bool visibleOtherAspectRatios = true,
+      double squareBorderWidth = 2,
+      List<CropAspectRatio>? customAspectRatios,
+      Color squareCircleColor = Colors.orange,
+      double squareCircleSize = 30,
+      Color defaultTextColor = Colors.black,
+      Color selectedTextColor = Colors.orange,
+      Color colorForWhiteSpace = Colors.white,
+      bool isConstrain = true,
+      bool makeDarkerOutside = true,
+      EdgeInsets? imageEdgeInsets = const EdgeInsets.all(10),
+      bool rootNavigator = false,
+      Key? key}) {
     /// Here, we are pushing a image cropping2 screen.
     Navigator.of(context, rootNavigator: rootNavigator).push(
       MaterialPageRoute(
-        builder: (_context) =>
-            ImageCroppingScreen(
-              _context,
-              imageBytes,
-              onImageStartLoading,
-              onImageEndLoading,
-              onImageDoneListener,
-              colorForWhiteSpace,
-              selectedImageRatio: selectedImageRatio,
-              visibleOtherAspectRatios: visibleOtherAspectRatios,
+        builder: (_context) => ImageCroppingScreen(
+          _context,
+          imageBytes,
+          onImageStartLoading,
+          onImageEndLoading,
+          onImageDoneListener,
+          colorForWhiteSpace,
+          customAspectRatios: customAspectRatios,
+          selectedImageRatio: selectedImageRatio,
+          visibleOtherAspectRatios: visibleOtherAspectRatios,
           squareCircleColor: squareCircleColor,
           squareBorderWidth: squareBorderWidth,
           squareCircleSize: squareCircleSize,
           defaultTextColor: defaultTextColor,
           selectedTextColor: selectedTextColor,
-          isConstrain : isConstrain,
-          makeDarkerOutside : makeDarkerOutside,
-          imageEdgeInsets : imageEdgeInsets,
+          isConstrain: isConstrain,
+          makeDarkerOutside: makeDarkerOutside,
+          imageEdgeInsets: imageEdgeInsets,
         ),
       ),
     );
@@ -81,7 +82,7 @@ class ImageCroppingScreen extends StatefulWidget {
   BuildContext _context;
 
   /// This property contains ImageRatio value. You can set the initialized a  spect ratio when starting the cropper by passing a value of ImageRatio. default value is `ImageRatio.FREE`
-  ImageRatio selectedImageRatio = ImageRatio.FREE;
+  CropAspectRatio? selectedImageRatio;
 
   /// This property will be used tom perform image compression before showing up
   late final ImageProcess process;
@@ -128,16 +129,14 @@ class ImageCroppingScreen extends StatefulWidget {
   /// This property makes square's outside darker
   bool makeDarkerOutside;
 
-  ImageCroppingScreen(
-      this._context,
-      Uint8List _imageBytes,
-      this._onImageStartLoading,
-      this._onImageEndLoading,
-      this._onImageDoneListener,
-      this._colorForWhiteSpace,
+  List<CropAspectRatio>? customAspectRatios;
+
+  ImageCroppingScreen(this._context, Uint8List _imageBytes, this._onImageStartLoading, this._onImageEndLoading,
+      this._onImageDoneListener, this._colorForWhiteSpace,
       {required this.selectedImageRatio,
       required this.visibleOtherAspectRatios,
       required this.squareBorderWidth,
+      required this.customAspectRatios,
       required this.squareCircleColor,
       required this.defaultTextColor,
       required this.selectedTextColor,
@@ -206,8 +205,8 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
                           defaultTextColor: widget.defaultTextColor,
                           selectedImageRatio: widget.selectedImageRatio,
                           selectedTextColor: widget.selectedTextColor,
-                          visibleOtherAspectRatios:
-                              widget.visibleOtherAspectRatios,
+                          visibleOtherAspectRatios: widget.visibleOtherAspectRatios,
+                          customAspectRatios: widget.customAspectRatios,
                         ),
                       ],
                     ),
@@ -236,7 +235,7 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
       finalImageBytes = widget.process.imageBytes;
       _setDeviceHeightWidth();
 
-      SetImageRatio.setImageRatio(widget.selectedImageRatio);
+      SetImageRatio.setImageRatio(null,widget.selectedImageRatio??CropAspectRatio.free());
       SetImageRatio.setDefaultButtonPosition();
       setState(() {});
     }, (image) {
@@ -261,7 +260,7 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
   /// set topview height(means screen top point to stack starting point height.)
   void _setTopHeight() {
     if (topViewHeight == 0) {
-      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
         topViewHeight = stackGlobalKey.globalPaintBounds?.top ?? 0;
       });
     }
@@ -279,3 +278,72 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
     }
   }
 }
+
+class CropAspectRatio extends Equatable{
+  final int ratioX;
+  final int ratioY;
+
+  const CropAspectRatio({
+    required this.ratioX,
+    required this.ratioY,
+  });
+  factory CropAspectRatio.free(){
+    return CropAspectRatio(ratioX: 0, ratioY: 0);
+  }
+  factory CropAspectRatio.fromRation(ImageRatio ratio) {
+    late int ratioX,ratioY;
+    switch(ratio){
+
+      case ImageRatio.RATIO_1_1:
+        ratioX = 1;
+        ratioY = 1;
+        break;
+      case ImageRatio.RATIO_1_2:
+        ratioX = 1;
+        ratioY = 2;
+        break;
+      case ImageRatio.RATIO_3_2:
+        ratioX = 3;
+        ratioY = 2;
+        break;
+      case ImageRatio.RATIO_4_3:
+        ratioX = 4;
+        ratioY = 3;
+        break;
+      case ImageRatio.RATIO_16_9:
+        ratioX = 16;
+        ratioY = 9;
+        break;
+      case ImageRatio.FREE:
+        ratioX = 0;
+        ratioY = 0;
+        break;
+    }
+    return CropAspectRatio(
+      ratioX: ratioX,
+      ratioY: ratioY,
+    );
+  }
+  bool equals(ImageRatio imageRatio){
+    switch(imageRatio){
+      case ImageRatio.RATIO_1_1:
+        return ratioX == 1 && ratioY == 1;
+      case ImageRatio.RATIO_1_2:
+        return ratioX == 1 && ratioY == 2;
+      case ImageRatio.RATIO_3_2:
+        return ratioX == 3 && ratioY == 2;
+      case ImageRatio.RATIO_4_3:
+        return ratioX == 4 && ratioY == 3;
+      case ImageRatio.RATIO_16_9:
+        return ratioX == 16 && ratioY == 9;
+      case ImageRatio.FREE:
+        return ratioX == 0 && ratioY == 0;
+    }
+  }
+
+  @override
+  List<Object?> get props => [ratioX,ratioY];
+
+
+}
+

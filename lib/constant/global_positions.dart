@@ -45,4 +45,4 @@ double topViewHeight = 0;
 Uint8List? finalImageBytes;
 late Library.Image libraryImage;
 
-ImageRatio? selectedImageRatio;
+CropAspectRatio selectedImageRatio=CropAspectRatio.free();

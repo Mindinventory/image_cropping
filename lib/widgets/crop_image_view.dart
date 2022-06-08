@@ -287,6 +287,18 @@ class _CroppingImageViewState extends State<CroppingImageView> {
       case DragDirection.ALL:
         _manageSquareDrag(state, details, dragDirection);
         break;
+      case DragDirection.LEFT_CENTRE:
+        // TODO: Handle this case.
+        break;
+      case DragDirection.TOP_CENTRE:
+        // TODO: Handle this case.
+        break;
+      case DragDirection.RIGHT_CENTRE:
+        // TODO: Handle this case.
+        break;
+      case DragDirection.BOTTOM_CENTRE:
+        // TODO: Handle this case.
+        break;
     }
     state(() {});
   }
@@ -321,7 +333,7 @@ class _CroppingImageViewState extends State<CroppingImageView> {
       leftTopDY = max<double>(topImageWidget, leftTopDY);
       cropSizeWidth = imageGlobalKey.currentContext!.size!.width.clamp(0, cropSizeWidth);
       cropSizeHeight = imageGlobalKey.currentContext!.size!.height.clamp(0, cropSizeHeight);
-      if(selectedImageRatio != ImageRatio.FREE){
+      if(!selectedImageRatio.equals(ImageRatio.FREE)){
         if (cropSizeWidth / currentRatioWidth >
             cropSizeHeight / currentRatioHeight) {
           cropSizeWidth = cropSizeHeight / currentRatioHeight * currentRatioWidth;
@@ -369,7 +381,7 @@ class _CroppingImageViewState extends State<CroppingImageView> {
     leftTopDY = globalPositionDY;
 
     // this logic is for Free ratio
-    if (selectedImageRatio == ImageRatio.FREE) {
+    if (selectedImageRatio.equals(ImageRatio.FREE)) {
       // set crop size width
       if (_previousLeftTopDX > leftTopDX) {
         // moving to left side
@@ -464,7 +476,7 @@ class _CroppingImageViewState extends State<CroppingImageView> {
     leftBottomDY = globalPositionDY;
 
     // this logic is for Free ratio
-    if (selectedImageRatio == ImageRatio.FREE) {
+    if (selectedImageRatio.equals(ImageRatio.FREE)) {
       // set crop size width
       if (_previousLeftBottomDX > leftBottomDX) {
         // moving to left side
@@ -561,7 +573,7 @@ class _CroppingImageViewState extends State<CroppingImageView> {
     rightTopDY = globalPositionDY;
 
     // this logic is Free ratio
-    if (selectedImageRatio == ImageRatio.FREE) {
+    if (selectedImageRatio.equals(ImageRatio.FREE)) {
       // set crop size width
       if (_previousRightTopDX > rightTopDX) {
         // moving to left side
@@ -660,7 +672,7 @@ class _CroppingImageViewState extends State<CroppingImageView> {
     rightBottomDY = globalPositionDY;
 
     // this logic is Free ratio
-    if (selectedImageRatio == ImageRatio.FREE) {
+    if (selectedImageRatio.equals(ImageRatio.FREE)) {
       // set crop size width
       if (_previousRightBottomDX > rightBottomDX) {
         // moving to left side
