@@ -61,7 +61,7 @@ final croppedBytes = await ImageCropping.cropImage(
     onImageDoneListener: (data) {
         // You can also use a listener instead of awaiting the function
         setState(() {
-        imageBytes = data;
+          imageBytes = data;
         });
     },
     selectedImageRatio: ImageRatio.RATIO_1_1,

@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -139,15 +139,22 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             },
           );
         },
+        customAspectRatios: [
+          CropAspectRatio(
+            ratioX: 4,
+            ratioY: 5,
+          ),
+        ],
         onImageStartLoading: showLoader,
         onImageEndLoading: hideLoader,
-        selectedImageRatio: ImageRatio.RATIO_1_1,
         visibleOtherAspectRatios: true,
         squareBorderWidth: 2,
+        isConstrain: false,
         squareCircleColor: AppColors.red,
         defaultTextColor: AppColors.black,
         selectedTextColor: AppColors.orange,
         colorForWhiteSpace: AppColors.white,
+        makeDarkerOutside: true,
       );
     }
   }
