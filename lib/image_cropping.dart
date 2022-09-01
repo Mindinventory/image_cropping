@@ -31,7 +31,7 @@ part 'widgets/crop_image_view.dart';
 part 'widgets/cropping_button.dart';
 
 class ImageCropping {
-  static void cropImage(
+  static Future<dynamic> cropImage(
       {required BuildContext context,
       required Uint8List imageBytes,
       required Function(dynamic) onImageDoneListener,
@@ -46,33 +46,36 @@ class ImageCropping {
       Color defaultTextColor = Colors.black,
       Color selectedTextColor = Colors.orange,
       Color colorForWhiteSpace = Colors.white,
+      int encodingQuality = 100,
+      String? workerPath,
       bool isConstrain = true,
       bool makeDarkerOutside = true,
       EdgeInsets? imageEdgeInsets = const EdgeInsets.all(10),
       bool rootNavigator = false,
       Key? key}) {
     /// Here, we are pushing a image cropping2 screen.
-    Navigator.of(context, rootNavigator: rootNavigator).push(
+    return Navigator.of(context,rootNavigator: rootNavigator).push(
       MaterialPageRoute(
         builder: (_context) => ImageCroppingScreen(
-          _context,
-          imageBytes,
-          onImageStartLoading,
-          onImageEndLoading,
-          onImageDoneListener,
-          colorForWhiteSpace,
-          customAspectRatios: customAspectRatios,
-          selectedImageRatio: selectedImageRatio,
-          visibleOtherAspectRatios: visibleOtherAspectRatios,
-          squareCircleColor: squareCircleColor,
-          squareBorderWidth: squareBorderWidth,
-          squareCircleSize: squareCircleSize,
-          defaultTextColor: defaultTextColor,
-          selectedTextColor: selectedTextColor,
+            _context,
+            imageBytes,
+            onImageStartLoading,
+            onImageEndLoading,
+            onImageDoneListener,
+            colorForWhiteSpace,
+            customAspectRatios: customAspectRatios,
+            selectedImageRatio: selectedImageRatio,
+            visibleOtherAspectRatios: visibleOtherAspectRatios,
+            squareCircleColor: squareCircleColor,
+            squareBorderWidth: squareBorderWidth,
+            squareCircleSize: squareCircleSize,
+            defaultTextColor: defaultTextColor,
+            selectedTextColor: selectedTextColor,
+            encodingQuality: encodingQuality,
+            workerPath: workerPath,
           isConstrain: isConstrain,
           makeDarkerOutside: makeDarkerOutside,
-          imageEdgeInsets: imageEdgeInsets,
-        ),
+          imageEdgeInsets: imageEdgeInsets,),
       ),
     );
   }
@@ -121,6 +124,13 @@ class ImageCroppingScreen extends StatefulWidget {
   /// This property contains Header menu icon size
   final double headerMenuSize = 30;
 
+  /// JPEG encoding quality of the cropped image (between 0 and 100, with 100 being the best quality)
+  int encodingQuality;
+
+  /// Path to your worker js file. You may want to rename it if you use several
+  /// workers. Will use 'worker.js' if nothing specified.
+  String? workerPath;
+
   /// This property is inner insets of image
   final EdgeInsets? imageEdgeInsets;
 
@@ -131,6 +141,7 @@ class ImageCroppingScreen extends StatefulWidget {
   final bool makeDarkerOutside;
 
   final List<CropAspectRatio>? customAspectRatios;
+
 
   ImageCroppingScreen(
       this._context,
@@ -147,12 +158,18 @@ class ImageCroppingScreen extends StatefulWidget {
       required this.defaultTextColor,
       required this.selectedTextColor,
       required this.squareCircleSize,
+      this.encodingQuality = 100,
+      this.workerPath,
       required this.isConstrain,
       required this.makeDarkerOutside,
       required this.imageEdgeInsets,
       Key? key})
       : super(key: key) {
-    process = ImageProcess(_imageBytes);
+    process = ImageProcess(
+      _imageBytes,
+      encodingQuality: encodingQuality,
+      workerPath: workerPath,
+    );
   }
 
   @override
@@ -225,7 +242,7 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
         },
       );
     } else {
-      return Container();
+      return const Center(child: CircularProgressIndicator());
     }
   }
 

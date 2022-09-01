@@ -7,7 +7,14 @@ class ImageProcess {
   /// image bytes which will be of user's picked image.
   Uint8List imageBytes;
 
-  ImageProcess(this.imageBytes);
+  /// JPEG encoding quality
+  final int encodingQuality;
+
+  ImageProcess(
+    this.imageBytes, {
+    required this.encodingQuality,
+    String? workerPath, // Used on web only
+  });
 
   /// compressed image is shown for user's reference
   void compress(Function() onBytesLoaded,
@@ -36,7 +43,7 @@ class ImageProcess {
     final _libraryUInt8List = Uint8List.fromList(
       Library.encodeJpg(
         libraryImage,
-        quality: 100,
+        quality: encodingQuality,
       ),
     );
     onImageLoaded.call(libraryImage, _libraryUInt8List);
