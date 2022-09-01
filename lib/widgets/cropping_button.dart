@@ -40,7 +40,8 @@ class CroppingButton extends StatefulWidget {
     this.squareCircleSize,
     this.imageLoadingStarted,
     this.imageLoadingFinished,
-    Key? key, required this.outputImageFormat,
+    Key? key,
+    required this.outputImageFormat,
   }) : super(key: key);
 
   @override

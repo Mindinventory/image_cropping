@@ -19,7 +19,9 @@ class ImageProcess {
   Uint8List imageBytes;
 
   ImageProcess(this.imageBytes,
-      {required this.encodingQuality, String? workerPath,required this.outputImageFormat}) {
+      {required this.encodingQuality,
+      String? workerPath,
+      required this.outputImageFormat}) {
     worker = html.Worker(workerPath ?? 'worker.js');
   }
 

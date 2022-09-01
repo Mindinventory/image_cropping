@@ -8,7 +8,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as Library;
 
-import 'common/compress_process.dart' if (dart.library.html) 'common/compress_process_web.dart';
+import 'common/compress_process.dart'
+    if (dart.library.html) 'common/compress_process_web.dart';
 import 'constant/strings.dart';
 
 part 'common/set_image_ratio.dart';
@@ -148,8 +149,13 @@ class ImageCroppingScreen extends StatefulWidget {
   /// Choose output format, default is jpg
   final OutputImageFormat outputImageFormat;
 
-  ImageCroppingScreen(this._context, Uint8List _imageBytes, this._onImageStartLoading, this._onImageEndLoading,
-      this._onImageDoneListener, this._colorForWhiteSpace,
+  ImageCroppingScreen(
+      this._context,
+      Uint8List _imageBytes,
+      this._onImageStartLoading,
+      this._onImageEndLoading,
+      this._onImageDoneListener,
+      this._colorForWhiteSpace,
       {this.outputImageFormat = OutputImageFormat.jpg,
       required this.selectedImageRatio,
       required this.visibleOtherAspectRatios,
@@ -166,12 +172,10 @@ class ImageCroppingScreen extends StatefulWidget {
       required this.imageEdgeInsets,
       Key? key})
       : super(key: key) {
-    process = ImageProcess(
-      _imageBytes,
-      encodingQuality: encodingQuality,
-      workerPath: workerPath,
-      outputImageFormat: outputImageFormat
-    );
+    process = ImageProcess(_imageBytes,
+        encodingQuality: encodingQuality,
+        workerPath: workerPath,
+        outputImageFormat: outputImageFormat);
   }
 
   @override
@@ -231,7 +235,8 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
                           defaultTextColor: widget.defaultTextColor,
                           selectedImageRatio: widget.selectedImageRatio,
                           selectedTextColor: widget.selectedTextColor,
-                          visibleOtherAspectRatios: widget.visibleOtherAspectRatios,
+                          visibleOtherAspectRatios:
+                              widget.visibleOtherAspectRatios,
                           customAspectRatios: widget.customAspectRatios,
                         ),
                       ],
@@ -261,7 +266,8 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
       finalImageBytes = widget.process.imageBytes;
       _setDeviceHeightWidth();
 
-      SetImageRatio.setImageRatio(null, widget.selectedImageRatio ?? CropAspectRatio.free());
+      SetImageRatio.setImageRatio(
+          null, widget.selectedImageRatio ?? CropAspectRatio.free());
       SetImageRatio.setDefaultButtonPosition();
       setState(() {});
     }, (image) {

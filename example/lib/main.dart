@@ -50,7 +50,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                         Icons.add_photo_alternate_outlined,
                         color: AppColors.black,
                       )
-                    : Image.memory(imageBytes!,),
+                    : Image.memory(
+                        imageBytes!,
+                      ),
                 onTap: () {
                   showImagePickerDialog();
                 },
@@ -124,7 +126,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   /// Open image picker
   void openImagePicker(source) async {
     showLoader();
-    final pickedFile = await ImagePicker().pickImage(source: source, maxWidth: 1920, maxHeight: 1920);
+    final pickedFile = await ImagePicker()
+        .pickImage(source: source, maxWidth: 1920, maxHeight: 1920);
     if (pickedFile == null) {
       imageBytes = null;
     } else {
@@ -188,7 +191,9 @@ class AppDialogButton extends StatefulWidget {
   final String buttonTitle;
   final VoidCallback onPressed;
 
-  const AppDialogButton({Key? key, required this.buttonTitle, required this.onPressed}) : super(key: key);
+  const AppDialogButton(
+      {Key? key, required this.buttonTitle, required this.onPressed})
+      : super(key: key);
 
   @override
   State<AppDialogButton> createState() => AppDialogButtonState();
