@@ -8,7 +8,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as Library;
 
-import 'common/compress_process.dart' if (dart.library.html) 'common/compress_process_web.dart';
+import 'common/compress_process.dart'
+    if (dart.library.html) 'common/compress_process_web.dart';
 import 'constant/strings.dart';
 
 part 'common/set_image_ratio.dart';
@@ -79,60 +80,65 @@ class ImageCropping {
 
 class ImageCroppingScreen extends StatefulWidget {
   /// context is use to get height & width of screen and pop this screen.
-  BuildContext _context;
+  final BuildContext _context;
 
   /// This property contains ImageRatio value. You can set the initialized a  spect ratio when starting the cropper by passing a value of ImageRatio. default value is `ImageRatio.FREE`
-  CropAspectRatio? selectedImageRatio;
+  final CropAspectRatio? selectedImageRatio;
 
   /// This property will be used tom perform image compression before showing up
   late final ImageProcess process;
 
   /// This property contains boolean value. If this properties is true then it shows all other aspect ratios in cropping2 screen. default value is `true`.
-  bool visibleOtherAspectRatios = true;
+  final bool visibleOtherAspectRatios;
 
   /// This is a callback. you have to override and show dialog or etc when image cropping2 is in loading state.
-  VoidCallback? _onImageStartLoading;
+  final VoidCallback? _onImageStartLoading;
 
   /// This is a callback. you have to override and hide dialog or etc when image cropping2 is ready to show result in cropping2 screen.
-  VoidCallback? _onImageEndLoading;
+  final VoidCallback? _onImageEndLoading;
 
   /// This is a callback. you have to override and you will get Uint8List as result.
-  Function(dynamic) _onImageDoneListener;
+  final Function(dynamic) _onImageDoneListener;
 
   /// This property contains double value. You can change square border width by passing this value.
-  double squareBorderWidth;
+  final double squareBorderWidth;
 
   /// This property contains Color value. You can change square circle color by passing this value.
-  Color squareCircleColor;
+  final Color squareCircleColor;
 
   /// This property contains Color value. By passing this property you can set aspect ratios color which are unselected.
-  Color defaultTextColor;
+  final Color defaultTextColor;
 
   /// This property contains Color value. By passing this property you can set aspect ratios color which is selected.
-  Color selectedTextColor;
+  final Color selectedTextColor;
 
   /// This property contains Color value. By passing this property you can set background color, if screen contains blank space.
-  Color _colorForWhiteSpace;
+  final Color _colorForWhiteSpace;
 
   /// This property contains Square circle(dot) size
-  double squareCircleSize = 30;
+  final double squareCircleSize;
 
   /// This property contains Header menu icon size
-  double headerMenuSize = 30;
+  final double headerMenuSize = 30;
 
   /// This property is inner insets of image
-  EdgeInsets? imageEdgeInsets;
+  final EdgeInsets? imageEdgeInsets;
 
   /// This property makes SquareCircle can't go outside of image
-  bool isConstrain;
+  final bool isConstrain;
 
   /// This property makes square's outside darker
-  bool makeDarkerOutside;
+  final bool makeDarkerOutside;
 
-  List<CropAspectRatio>? customAspectRatios;
+  final List<CropAspectRatio>? customAspectRatios;
 
-  ImageCroppingScreen(this._context, Uint8List _imageBytes, this._onImageStartLoading, this._onImageEndLoading,
-      this._onImageDoneListener, this._colorForWhiteSpace,
+  ImageCroppingScreen(
+      this._context,
+      Uint8List _imageBytes,
+      this._onImageStartLoading,
+      this._onImageEndLoading,
+      this._onImageDoneListener,
+      this._colorForWhiteSpace,
       {required this.selectedImageRatio,
       required this.visibleOtherAspectRatios,
       required this.squareBorderWidth,
@@ -205,7 +211,8 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
                           defaultTextColor: widget.defaultTextColor,
                           selectedImageRatio: widget.selectedImageRatio,
                           selectedTextColor: widget.selectedTextColor,
-                          visibleOtherAspectRatios: widget.visibleOtherAspectRatios,
+                          visibleOtherAspectRatios:
+                              widget.visibleOtherAspectRatios,
                           customAspectRatios: widget.customAspectRatios,
                         ),
                       ],
@@ -235,7 +242,8 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
       finalImageBytes = widget.process.imageBytes;
       _setDeviceHeightWidth();
 
-      SetImageRatio.setImageRatio(null,widget.selectedImageRatio??CropAspectRatio.free());
+      SetImageRatio.setImageRatio(
+          null, widget.selectedImageRatio ?? CropAspectRatio.free());
       SetImageRatio.setDefaultButtonPosition();
       setState(() {});
     }, (image) {
@@ -279,7 +287,7 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
   }
 }
 
-class CropAspectRatio extends Equatable{
+class CropAspectRatio extends Equatable {
   final int ratioX;
   final int ratioY;
 
@@ -287,13 +295,12 @@ class CropAspectRatio extends Equatable{
     required this.ratioX,
     required this.ratioY,
   });
-  factory CropAspectRatio.free(){
+  factory CropAspectRatio.free() {
     return CropAspectRatio(ratioX: 0, ratioY: 0);
   }
   factory CropAspectRatio.fromRation(ImageRatio ratio) {
-    late int ratioX,ratioY;
-    switch(ratio){
-
+    late int ratioX, ratioY;
+    switch (ratio) {
       case ImageRatio.RATIO_1_1:
         ratioX = 1;
         ratioY = 1;
@@ -324,8 +331,8 @@ class CropAspectRatio extends Equatable{
       ratioY: ratioY,
     );
   }
-  bool equals(ImageRatio imageRatio){
-    switch(imageRatio){
+  bool equals(ImageRatio imageRatio) {
+    switch (imageRatio) {
       case ImageRatio.RATIO_1_1:
         return ratioX == 1 && ratioY == 1;
       case ImageRatio.RATIO_1_2:
@@ -342,8 +349,5 @@ class CropAspectRatio extends Equatable{
   }
 
   @override
-  List<Object?> get props => [ratioX,ratioY];
-
-
+  List<Object?> get props => [ratioX, ratioY];
 }
-

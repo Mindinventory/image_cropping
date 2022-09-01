@@ -31,8 +31,10 @@ double currentRatioHeight = 0;
 
 /// Image Widget's real size with position based on Stack
 Rect rectImageWidget = Rect.zero;
+
 /// Image Widget and Stack's width gap
 double gapImageWidth = 0;
+
 /// Image Widget and Stack's height gap
 double gapImageHeight = 0;
 
@@ -45,4 +47,4 @@ double topViewHeight = 0;
 Uint8List? finalImageBytes;
 late Library.Image libraryImage;
 
-CropAspectRatio selectedImageRatio=CropAspectRatio.free();
+CropAspectRatio selectedImageRatio = CropAspectRatio.free();

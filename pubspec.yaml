@@ -1,6 +1,6 @@
 name: image_cropping
 description: This package helps you to crop image with ratio and free scale.
-version: 0.0.11
+version: 0.0.12
 homepage: https://github.com/Mindinventory/image_cropping
 
 
