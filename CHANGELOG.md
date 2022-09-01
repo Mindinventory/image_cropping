@@ -1,3 +1,6 @@
+## [0.0.13] - 2022-09-01
+* Added support for image format, encoding quality.
+
 ## [0.0.12] - 2022-06-08
 * Added support for custom aspect-ratios. 
 

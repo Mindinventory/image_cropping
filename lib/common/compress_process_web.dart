@@ -2,6 +2,7 @@ import 'dart:html' as html;
 import 'dart:typed_data';
 
 import 'package:image/image.dart';
+import 'package:image_cropping/image_cropping.dart';
 
 /// compressing cropping process for web is done here
 class ImageProcess {
@@ -11,11 +12,14 @@ class ImageProcess {
   /// JPEG encoding quality, not used yet
   final int encodingQuality;
 
+  /// Output format of image
+  final OutputImageFormat outputImageFormat;
+
   /// image bytes which will be of user's picked image.
   Uint8List imageBytes;
 
   ImageProcess(this.imageBytes,
-      {required this.encodingQuality, String? workerPath}) {
+      {required this.encodingQuality, String? workerPath,required this.outputImageFormat}) {
     worker = html.Worker(workerPath ?? 'worker.js');
   }
 
@@ -51,6 +55,7 @@ class ImageProcess {
       imageCropWidth,
       imageCropHeight,
       encodingQuality,
+      outputImageFormat.index
     ]);
     final event = await worker.onMessage.first;
     onImageLoaded.call(

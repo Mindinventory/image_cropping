@@ -72,6 +72,7 @@ final croppedBytes = await ImageCropping.cropImage(
     selectedTextColor: Colors.black,
     colorForWhiteSpace: Colors.grey,
     encodingQuality: 80,
+    outputImageFormat: OutputImageFormat.jpg, 
     workerPath: 'crop_worker.js',
 );
 ```
@@ -119,6 +120,9 @@ This property contains Color value. By passing this property you can set backgro
 ##### encodingQuality
 Set the encodingQuality of the cropped image. Defaults to 100 (max).
 High quality involves bigger image file size.
+
+#### outputImageFormat
+Output format of cropped image, can be PNG or JPG, default is JPG.
 
 ##### workerPath
 You may want to change the worker.js name, especially if you use other web workers and you already have a worker.js file.

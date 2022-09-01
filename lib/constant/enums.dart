@@ -25,3 +25,8 @@ enum ImageRotation {
   LEFT,
   RIGHT,
 }
+
+enum OutputImageFormat {
+  jpg,
+  png
+}

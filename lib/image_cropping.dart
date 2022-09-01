@@ -8,8 +8,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as Library;
 
-import 'common/compress_process.dart'
-    if (dart.library.html) 'common/compress_process_web.dart';
+import 'common/compress_process.dart' if (dart.library.html) 'common/compress_process_web.dart';
 import 'constant/strings.dart';
 
 part 'common/set_image_ratio.dart';
@@ -52,30 +51,33 @@ class ImageCropping {
       bool makeDarkerOutside = true,
       EdgeInsets? imageEdgeInsets = const EdgeInsets.all(10),
       bool rootNavigator = false,
+      OutputImageFormat outputImageFormat = OutputImageFormat.jpg,
       Key? key}) {
     /// Here, we are pushing a image cropping2 screen.
-    return Navigator.of(context,rootNavigator: rootNavigator).push(
+    return Navigator.of(context, rootNavigator: rootNavigator).push(
       MaterialPageRoute(
         builder: (_context) => ImageCroppingScreen(
-            _context,
-            imageBytes,
-            onImageStartLoading,
-            onImageEndLoading,
-            onImageDoneListener,
-            colorForWhiteSpace,
-            customAspectRatios: customAspectRatios,
-            selectedImageRatio: selectedImageRatio,
-            visibleOtherAspectRatios: visibleOtherAspectRatios,
-            squareCircleColor: squareCircleColor,
-            squareBorderWidth: squareBorderWidth,
-            squareCircleSize: squareCircleSize,
-            defaultTextColor: defaultTextColor,
-            selectedTextColor: selectedTextColor,
-            encodingQuality: encodingQuality,
-            workerPath: workerPath,
+          _context,
+          imageBytes,
+          onImageStartLoading,
+          onImageEndLoading,
+          onImageDoneListener,
+          colorForWhiteSpace,
+          customAspectRatios: customAspectRatios,
+          selectedImageRatio: selectedImageRatio,
+          visibleOtherAspectRatios: visibleOtherAspectRatios,
+          squareCircleColor: squareCircleColor,
+          squareBorderWidth: squareBorderWidth,
+          squareCircleSize: squareCircleSize,
+          defaultTextColor: defaultTextColor,
+          selectedTextColor: selectedTextColor,
+          encodingQuality: encodingQuality,
+          workerPath: workerPath,
           isConstrain: isConstrain,
           makeDarkerOutside: makeDarkerOutside,
-          imageEdgeInsets: imageEdgeInsets,),
+          imageEdgeInsets: imageEdgeInsets,
+          outputImageFormat: outputImageFormat,
+        ),
       ),
     );
   }
@@ -124,7 +126,7 @@ class ImageCroppingScreen extends StatefulWidget {
   /// This property contains Header menu icon size
   final double headerMenuSize = 30;
 
-  /// JPEG encoding quality of the cropped image (between 0 and 100, with 100 being the best quality)
+  /// works only if output format is JPG, JPG encoding quality of the cropped image (between 0 and 100, with 100 being the best quality)
   int encodingQuality;
 
   /// Path to your worker js file. You may want to rename it if you use several
@@ -140,17 +142,16 @@ class ImageCroppingScreen extends StatefulWidget {
   /// This property makes square's outside darker
   final bool makeDarkerOutside;
 
+  /// pass custom aspect ratios
   final List<CropAspectRatio>? customAspectRatios;
 
+  /// Choose output format, default is jpg
+  final OutputImageFormat outputImageFormat;
 
-  ImageCroppingScreen(
-      this._context,
-      Uint8List _imageBytes,
-      this._onImageStartLoading,
-      this._onImageEndLoading,
-      this._onImageDoneListener,
-      this._colorForWhiteSpace,
-      {required this.selectedImageRatio,
+  ImageCroppingScreen(this._context, Uint8List _imageBytes, this._onImageStartLoading, this._onImageEndLoading,
+      this._onImageDoneListener, this._colorForWhiteSpace,
+      {this.outputImageFormat = OutputImageFormat.jpg,
+      required this.selectedImageRatio,
       required this.visibleOtherAspectRatios,
       required this.squareBorderWidth,
       required this.customAspectRatios,
@@ -169,6 +170,7 @@ class ImageCroppingScreen extends StatefulWidget {
       _imageBytes,
       encodingQuality: encodingQuality,
       workerPath: workerPath,
+      outputImageFormat: outputImageFormat
     );
   }
 
@@ -202,6 +204,7 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
                     child: Column(
                       children: [
                         CroppingButton(
+                          outputImageFormat: widget.outputImageFormat,
                           imageBytes: widget.process.imageBytes,
                           context: context,
                           imageProcess: widget.process,
@@ -228,8 +231,7 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
                           defaultTextColor: widget.defaultTextColor,
                           selectedImageRatio: widget.selectedImageRatio,
                           selectedTextColor: widget.selectedTextColor,
-                          visibleOtherAspectRatios:
-                              widget.visibleOtherAspectRatios,
+                          visibleOtherAspectRatios: widget.visibleOtherAspectRatios,
                           customAspectRatios: widget.customAspectRatios,
                         ),
                       ],
@@ -259,8 +261,7 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
       finalImageBytes = widget.process.imageBytes;
       _setDeviceHeightWidth();
 
-      SetImageRatio.setImageRatio(
-          null, widget.selectedImageRatio ?? CropAspectRatio.free());
+      SetImageRatio.setImageRatio(null, widget.selectedImageRatio ?? CropAspectRatio.free());
       SetImageRatio.setDefaultButtonPosition();
       setState(() {});
     }, (image) {
@@ -312,9 +313,11 @@ class CropAspectRatio extends Equatable {
     required this.ratioX,
     required this.ratioY,
   });
+
   factory CropAspectRatio.free() {
     return CropAspectRatio(ratioX: 0, ratioY: 0);
   }
+
   factory CropAspectRatio.fromRation(ImageRatio ratio) {
     late int ratioX, ratioY;
     switch (ratio) {
@@ -348,6 +351,7 @@ class CropAspectRatio extends Equatable {
       ratioY: ratioY,
     );
   }
+
   bool equals(ImageRatio imageRatio) {
     switch (imageRatio) {
       case ImageRatio.RATIO_1_1:

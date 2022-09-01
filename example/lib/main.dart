@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                         Icons.add_photo_alternate_outlined,
                         color: AppColors.black,
                       )
-                    : Image.memory(imageBytes!),
+                    : Image.memory(imageBytes!,),
                 onTap: () {
                   showImagePickerDialog();
                 },
@@ -124,38 +124,43 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   /// Open image picker
   void openImagePicker(source) async {
     showLoader();
-    final pickedFile = await ImagePicker()
-        .pickImage(source: source, maxWidth: 1920, maxHeight: 1920);
-    imageBytes = await pickedFile?.readAsBytes();
-
+    final pickedFile = await ImagePicker().pickImage(source: source, maxWidth: 1920, maxHeight: 1920);
+    if (pickedFile == null) {
+      imageBytes = null;
+    } else {
+      imageBytes = await pickedFile.readAsBytes();
+    }
     if (imageBytes != null) {
       ImageCropping.cropImage(
-        context: context,
-        imageBytes: imageBytes!,
-        onImageDoneListener: (data) {
-          setState(
-            () {
-              imageBytes = data;
-            },
-          );
-        },
-        customAspectRatios: [
-          CropAspectRatio(
-            ratioX: 4,
-            ratioY: 5,
-          ),
-        ],
-        onImageStartLoading: showLoader,
-        onImageEndLoading: hideLoader,
-        visibleOtherAspectRatios: true,
-        squareBorderWidth: 2,
-        isConstrain: false,
-        squareCircleColor: AppColors.red,
-        defaultTextColor: AppColors.black,
-        selectedTextColor: AppColors.orange,
-        colorForWhiteSpace: AppColors.white,
-        makeDarkerOutside: true,
-      );
+          context: context,
+          imageBytes: imageBytes!,
+          onImageDoneListener: (data) {
+            setState(
+              () {
+                imageBytes = data;
+              },
+            );
+          },
+          customAspectRatios: [
+            CropAspectRatio(
+              ratioX: 4,
+              ratioY: 5,
+            ),
+          ],
+          onImageStartLoading: showLoader,
+          onImageEndLoading: hideLoader,
+          visibleOtherAspectRatios: true,
+          squareBorderWidth: 2,
+          isConstrain: false,
+          squareCircleColor: AppColors.red,
+          defaultTextColor: AppColors.black,
+          selectedTextColor: AppColors.orange,
+          colorForWhiteSpace: AppColors.white,
+          makeDarkerOutside: true,
+          outputImageFormat: OutputImageFormat.jpg,
+          encodingQuality: 10);
+    } else {
+      hideLoader();
     }
   }
 
@@ -183,9 +188,7 @@ class AppDialogButton extends StatefulWidget {
   final String buttonTitle;
   final VoidCallback onPressed;
 
-  const AppDialogButton(
-      {Key? key, required this.buttonTitle, required this.onPressed})
-      : super(key: key);
+  const AppDialogButton({Key? key, required this.buttonTitle, required this.onPressed}) : super(key: key);
 
   @override
   State<AppDialogButton> createState() => AppDialogButtonState();

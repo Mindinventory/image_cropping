@@ -734,7 +734,6 @@ class _CroppingImageViewState extends State<CroppingImageView> {
       // check crop size less than declared min crop size. then set to previous size.
       if (cropSizeWidth < minCropSizeWidth ||
           cropSizeHeight < minCropSizeHeight) {
-        print("size: previous default");
         cropSizeWidth = _previousCropWidth;
         cropSizeHeight = _previousCropHeight;
         rightBottomDX = _previousRightBottomDX;

@@ -27,6 +27,8 @@ class CroppingButton extends StatefulWidget {
   /// (if you have passed colorForWhiteSpace or else White background) in image cropping2 screen.
   final Uint8List imageBytes;
 
+  final OutputImageFormat outputImageFormat;
+
   const CroppingButton({
     required this.onImageDoneListener,
     required this.imageBytes,
@@ -38,7 +40,7 @@ class CroppingButton extends StatefulWidget {
     this.squareCircleSize,
     this.imageLoadingStarted,
     this.imageLoadingFinished,
-    Key? key,
+    Key? key, required this.outputImageFormat,
   }) : super(key: key);
 
   @override
@@ -130,14 +132,13 @@ class _CroppingButtonState extends State<CroppingButton> {
     imageWidth = libraryImage.width.toDouble();
     imageHeight = libraryImage.height.toDouble();
 
-    var leftX = leftTopDX + (widget.squareCircleSize! / 3);
-    var leftY = leftTopDY + (widget.squareCircleSize! / 3);
+    final leftX = leftTopDX + (widget.squareCircleSize! / 3);
+    final leftY = leftTopDY + (widget.squareCircleSize! / 3);
 
-    var imageCropX = (imageWidth * leftX) / stackWidth;
-    var imageCropY = (imageHeight * leftY) / stackHeight;
-    var imageCropWidth = (imageWidth * cropSizeWidth) / stackWidth;
-    var imageCropHeight = (imageHeight * cropSizeHeight) / stackHeight;
-    final timeStamp = DateTime.now().millisecondsSinceEpoch;
+    final imageCropX = (imageWidth * leftX) / stackWidth;
+    final imageCropY = (imageHeight * leftY) / stackHeight;
+    final imageCropWidth = (imageWidth * cropSizeWidth) / stackWidth;
+    final imageCropHeight = (imageHeight * cropSizeHeight) / stackHeight;
     widget.imageProcess.crop(
       libraryImage,
       imageCropX.toInt(),

@@ -33,13 +33,25 @@ void main() {
         arguments[6],
         arguments[7],
       );
-
-      final _libraryUInt8List = Uint8List.fromList(
-        Library.encodeJpg(
-          libraryImage,
-          quality: arguments[8],
-        ),
-      );
+      Uint8List _libraryUInt8List;
+      if(arguments.length>8){
+        _libraryUInt8List = Uint8List.fromList(
+          arguments[9]==0?Library.encodeJpg(
+            libraryImage,
+            quality: arguments[8],
+          ):Library.encodePng(
+            libraryImage
+          ),
+        );
+      }
+      else {
+       _libraryUInt8List = Uint8List.fromList(
+          Library.encodeJpg(
+            libraryImage,
+            quality: arguments[8],
+          ),
+        );
+      }
       self.postMessage([libraryImage.getBytes(), _libraryUInt8List]);
     }
   });
