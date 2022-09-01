@@ -36,7 +36,8 @@ class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
   @override
   void initState() {
     /// Set Image ratio for cropping2 the image.
-    SetImageRatio.setImageRatio(null,widget.selectedImageRatio??CropAspectRatio.free());
+    SetImageRatio.setImageRatio(
+        null, widget.selectedImageRatio ?? CropAspectRatio.free());
 
     /// Set default button position (left, right, top, bottom) in center of the screen.
     SetImageRatio.setDefaultButtonPosition();
@@ -68,19 +69,19 @@ class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
                 ),
               ),
             ),
-            for(final CropAspectRatio ratio in widget.customAspectRatios??[])...[
-
+            for (final CropAspectRatio ratio
+                in widget.customAspectRatios ?? []) ...[
               SizedBox(
                 width: (kIsWeb) ? 20 : 0,
               ),
               InkWell(
                 onTap: () {
-                  changeImageRatio(widget.state, null,aspectRatio: ratio);
+                  changeImageRatio(widget.state, null, aspectRatio: ratio);
                 },
                 child: Text(
                   '${ratio.ratioX}:${ratio.ratioY}',
                   style: TextStyle(
-                    color: (selectedImageRatio==ratio)
+                    color: (selectedImageRatio == ratio)
                         ? widget.selectedTextColor
                         : widget.defaultTextColor,
                   ),
@@ -99,9 +100,10 @@ class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
               child: Text(
                 Strings.ratio_1_1,
                 style: TextStyle(
-                  color: (selectedImageRatio.equals(ImageRatio.RATIO_1_1)==true)
-                      ? widget.selectedTextColor
-                      : widget.defaultTextColor,
+                  color:
+                      (selectedImageRatio.equals(ImageRatio.RATIO_1_1) == true)
+                          ? widget.selectedTextColor
+                          : widget.defaultTextColor,
                 ),
               ),
             ),
@@ -118,7 +120,8 @@ class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
               child: Text(
                 Strings.ratio_1_2,
                 style: TextStyle(
-                  color: ((selectedImageRatio.equals(ImageRatio.RATIO_1_2)==true))
+                  color: ((selectedImageRatio.equals(ImageRatio.RATIO_1_2) ==
+                          true))
                       ? widget.selectedTextColor
                       : widget.defaultTextColor,
                 ),
@@ -137,7 +140,8 @@ class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
               child: Text(
                 Strings.ratio_3_2,
                 style: TextStyle(
-                  color: ((selectedImageRatio.equals(ImageRatio.RATIO_3_2)==true))
+                  color: ((selectedImageRatio.equals(ImageRatio.RATIO_3_2) ==
+                          true))
                       ? widget.selectedTextColor
                       : widget.defaultTextColor,
                 ),
@@ -156,9 +160,10 @@ class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
               child: Text(
                 Strings.ratio_4_3,
                 style: TextStyle(
-                  color: (selectedImageRatio.equals(ImageRatio.RATIO_4_3)==true)
-                      ? widget.selectedTextColor
-                      : widget.defaultTextColor,
+                  color:
+                      (selectedImageRatio.equals(ImageRatio.RATIO_4_3) == true)
+                          ? widget.selectedTextColor
+                          : widget.defaultTextColor,
                 ),
               ),
             ),
@@ -175,9 +180,10 @@ class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
               child: Text(
                 Strings.ratio_16_9,
                 style: TextStyle(
-                  color:(selectedImageRatio.equals(ImageRatio.RATIO_16_9)==true)
-                      ? widget.selectedTextColor
-                      : widget.defaultTextColor,
+                  color:
+                      (selectedImageRatio.equals(ImageRatio.RATIO_16_9) == true)
+                          ? widget.selectedTextColor
+                          : widget.defaultTextColor,
                 ),
               ),
             ),
@@ -193,8 +199,9 @@ class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
   }
 
   /// Set crop ratio and again render the screen.
-  void changeImageRatio(state, ImageRatio? imageRatio, {CropAspectRatio? aspectRatio}) {
-    SetImageRatio.setImageRatio(imageRatio,aspectRatio);
+  void changeImageRatio(state, ImageRatio? imageRatio,
+      {CropAspectRatio? aspectRatio}) {
+    SetImageRatio.setImageRatio(imageRatio, aspectRatio);
     state(() {});
   }
 }

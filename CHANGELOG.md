@@ -1,3 +1,6 @@
+## [0.0.12] - 2022-06-08
+* Added support for custom aspect-ratios. 
+
 ## [0.0.11] - 2022-02-11
 * Fixed: UI getting stuck when opening and cropping image for the web.
 
