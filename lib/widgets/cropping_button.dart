@@ -141,7 +141,6 @@ class _CroppingButtonState extends State<CroppingButton> {
     final imageCropWidth = (imageWidth * cropSizeWidth) / stackWidth;
     final imageCropHeight = (imageHeight * cropSizeHeight) / stackHeight;
     widget.imageProcess.crop(
-      libraryImage,
       imageCropX.toInt(),
       imageCropY.toInt(),
       imageCropWidth.toInt(),

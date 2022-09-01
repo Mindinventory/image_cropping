@@ -41,7 +41,6 @@ class ImageProcess {
 
   /// Image cropping will be done by crop method
   void crop(
-      Image libraryImage,
       int imageCropX,
       int imageCropY,
       int imageCropWidth,
