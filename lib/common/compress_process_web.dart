@@ -18,33 +18,27 @@ class ImageProcess {
   /// image bytes which will be of user's picked image.
   Uint8List imageBytes;
 
-  ImageProcess(this.imageBytes,
-      {required this.encodingQuality,
-      String? workerPath,
-      required this.outputImageFormat}) {
+  ImageProcess(this.imageBytes, {required this.encodingQuality, String? workerPath, required this.outputImageFormat}) {
     worker = html.Worker(workerPath ?? 'worker.js');
   }
 
   /// compressed image is shown for user's reference
-  void compress(
-      Function() onBytesLoaded, Function(Image) onLibraryImageLoaded) async {
+  void compress(Function() onBytesLoaded, Function(Image) onLibraryImageLoaded) async {
     worker.postMessage([0, imageBytes]);
     final event = await worker.onMessage.first;
     final List<int> intList = event.data[0];
     imageBytes = Uint8List.fromList(intList);
     onBytesLoaded.call();
-    final image = await Image.fromBytes(
-        event.data[1], event.data[2], event.data[3],
-        channels: Channels.rgb);
+    Uint8List byteData = Uint8List.fromList(imageBytes);
+    int width = byteData.buffer.asByteData().getInt32(0, Endian.big);
+    int height = byteData.buffer.asByteData().getInt32(4, Endian.big);
+
+    final image = await Image.fromBytes(width: width, height: height, bytes: imageBytes.buffer);
     onLibraryImageLoaded.call(image);
   }
 
   /// Image cropping will be done by crop method
-  void crop(
-      int imageCropX,
-      int imageCropY,
-      int imageCropWidth,
-      int imageCropHeight,
+  void crop(int imageCropX, int imageCropY, int imageCropWidth, int imageCropHeight,
       Function(Image, Uint8List) onImageLoaded) async {
     worker.postMessage([
       1,
@@ -60,8 +54,7 @@ class ImageProcess {
     ]);
     final event = await worker.onMessage.first;
     onImageLoaded.call(
-        Image.fromBytes(imageCropWidth, imageCropHeight, event.data[0],
-            channels: Channels.rgb),
+        Image.fromBytes(width: imageCropWidth, height: imageCropHeight, bytes: event.data[0], order: ChannelOrder.rgb),
         event.data[1]);
   }
 }

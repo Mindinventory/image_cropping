@@ -23,30 +23,24 @@ class ImageProcess {
   });
 
   /// compressed image is shown for user's reference
-  void compress(Function() onBytesLoaded,
-      Function(Library.Image) onLibraryImageLoaded) async {
+  void compress(Function() onBytesLoaded, Function(Library.Image) onLibraryImageLoaded) async {
     final libraryImage = getCompressedImage(imageBytes);
     onBytesLoaded.call();
     onLibraryImageLoaded.call(libraryImage);
   }
 
   /// Image cropping will be done by crop method
-  void crop(
-      int imageCropX,
-      int imageCropY,
-      int imageCropWidth,
-      int imageCropHeight,
+  void crop(int imageCropX, int imageCropY, int imageCropWidth, int imageCropHeight,
       Function(Library.Image, Uint8List) onImageLoaded) async {
     libraryImage = Library.copyCrop(
       libraryImage,
-      imageCropX,
-      imageCropY,
-      imageCropWidth,
-      imageCropHeight,
+      x: imageCropX,
+      y: imageCropY,
+      width: imageCropWidth,
+      height: imageCropHeight,
     );
 
-    onImageLoaded.call(
-        libraryImage, Uint8List.fromList(_compressImage(libraryImage)));
+    onImageLoaded.call(libraryImage, Uint8List.fromList(_compressImage(libraryImage)));
   }
 
   List<int> _compressImage(Library.Image libraryImage) {
