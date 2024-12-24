@@ -16,7 +16,8 @@ class ShowCropImageRatios extends StatefulWidget {
   final Color? defaultTextColor;
   final CropAspectRatio? selectedImageRatio;
   final state;
-  List<CropAspectRatio>? customAspectRatios;
+  final List<CropAspectRatio>? customAspectRatios;
+  final bool useInitialFullCrop;
 
   ShowCropImageRatios({
     this.visibleOtherAspectRatios,
@@ -25,6 +26,7 @@ class ShowCropImageRatios extends StatefulWidget {
     this.defaultTextColor,
     this.customAspectRatios,
     this.state,
+    required this.useInitialFullCrop,
     Key? key,
   }) : super(key: key);
 
@@ -35,13 +37,14 @@ class ShowCropImageRatios extends StatefulWidget {
 class _ShowCropImageRatiosState extends State<ShowCropImageRatios> {
   @override
   void initState() {
+    if(!widget.useInitialFullCrop) {
     /// Set Image ratio for cropping2 the image.
     SetImageRatio.setImageRatio(
         null, widget.selectedImageRatio ?? CropAspectRatio.free());
 
     /// Set default button position (left, right, top, bottom) in center of the screen.
     SetImageRatio.setDefaultButtonPosition();
-
+    }
     super.initState();
   }
 

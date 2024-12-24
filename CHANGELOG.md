@@ -1,3 +1,6 @@
+### [0.0.14] - 2024-12-24
+* Introduced the `useInitialFullCrop` property to set the initial crop size of the image to its full dimensions.
+
 ## [0.0.13] - 2022-09-01
 * Added support for image format, encoding quality.
 
