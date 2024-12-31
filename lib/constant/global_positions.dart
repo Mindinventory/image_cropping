@@ -43,7 +43,9 @@ var currentRotationDegreeValue = 0;
 double imageViewMaxHeight = 0;
 double imageViewMaxWidth = 0;
 double topViewHeight = 0;
+double leftViewWidth = 0;
 
+bool isImageLoaded = false;
 Uint8List? finalImageBytes;
 late Library.Image libraryImage;
 

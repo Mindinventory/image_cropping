@@ -161,6 +161,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           colorForWhiteSpace: AppColors.white,
           makeDarkerOutside: true,
           outputImageFormat: OutputImageFormat.jpg,
+          useInitialFullCrop: true,
           encodingQuality: 10);
     } else {
       hideLoader();

@@ -8,8 +8,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as Library;
 
-import 'common/compress_process.dart'
-    if (dart.library.html) 'common/compress_process_web.dart';
+import 'common/compress_process.dart' if (dart.library.html) 'common/compress_process_web.dart';
 import 'constant/strings.dart';
 
 part 'common/set_image_ratio.dart';
@@ -53,32 +52,30 @@ class ImageCropping {
       EdgeInsets? imageEdgeInsets = const EdgeInsets.all(10),
       bool rootNavigator = false,
       OutputImageFormat outputImageFormat = OutputImageFormat.jpg,
+      bool useInitialFullCrop = false,
       Key? key}) {
+    isImageLoaded = false;
+
     /// Here, we are pushing a image cropping2 screen.
     return Navigator.of(context, rootNavigator: rootNavigator).push(
       MaterialPageRoute(
         builder: (_context) => ImageCroppingScreen(
-          _context,
-          imageBytes,
-          onImageStartLoading,
-          onImageEndLoading,
-          onImageDoneListener,
-          colorForWhiteSpace,
-          customAspectRatios: customAspectRatios,
-          selectedImageRatio: selectedImageRatio,
-          visibleOtherAspectRatios: visibleOtherAspectRatios,
-          squareCircleColor: squareCircleColor,
-          squareBorderWidth: squareBorderWidth,
-          squareCircleSize: squareCircleSize,
-          defaultTextColor: defaultTextColor,
-          selectedTextColor: selectedTextColor,
-          encodingQuality: encodingQuality,
-          workerPath: workerPath,
-          isConstrain: isConstrain,
-          makeDarkerOutside: makeDarkerOutside,
-          imageEdgeInsets: imageEdgeInsets,
-          outputImageFormat: outputImageFormat,
-        ),
+            _context, imageBytes, onImageStartLoading, onImageEndLoading, onImageDoneListener, colorForWhiteSpace,
+            customAspectRatios: customAspectRatios,
+            selectedImageRatio: selectedImageRatio,
+            visibleOtherAspectRatios: visibleOtherAspectRatios,
+            squareCircleColor: squareCircleColor,
+            squareBorderWidth: squareBorderWidth,
+            squareCircleSize: squareCircleSize,
+            defaultTextColor: defaultTextColor,
+            selectedTextColor: selectedTextColor,
+            encodingQuality: encodingQuality,
+            workerPath: workerPath,
+            isConstrain: isConstrain,
+            makeDarkerOutside: makeDarkerOutside,
+            imageEdgeInsets: imageEdgeInsets,
+            outputImageFormat: outputImageFormat,
+            useInitialFullCrop: useInitialFullCrop),
       ),
     );
   }
@@ -128,11 +125,11 @@ class ImageCroppingScreen extends StatefulWidget {
   final double headerMenuSize = 30;
 
   /// works only if output format is JPG, JPG encoding quality of the cropped image (between 0 and 100, with 100 being the best quality)
-  int encodingQuality;
+  final int encodingQuality;
 
   /// Path to your worker js file. You may want to rename it if you use several
   /// workers. Will use 'worker.js' if nothing specified.
-  String? workerPath;
+  final String? workerPath;
 
   /// This property is inner insets of image
   final EdgeInsets? imageEdgeInsets;
@@ -149,13 +146,11 @@ class ImageCroppingScreen extends StatefulWidget {
   /// Choose output format, default is jpg
   final OutputImageFormat outputImageFormat;
 
-  ImageCroppingScreen(
-      this._context,
-      Uint8List _imageBytes,
-      this._onImageStartLoading,
-      this._onImageEndLoading,
-      this._onImageDoneListener,
-      this._colorForWhiteSpace,
+  /// Use this flag to set the initial crop size to match the image's full size.
+  final bool useInitialFullCrop;
+
+  ImageCroppingScreen(this._context, Uint8List _imageBytes, this._onImageStartLoading, this._onImageEndLoading,
+      this._onImageDoneListener, this._colorForWhiteSpace,
       {this.outputImageFormat = OutputImageFormat.jpg,
       required this.selectedImageRatio,
       required this.visibleOtherAspectRatios,
@@ -170,12 +165,11 @@ class ImageCroppingScreen extends StatefulWidget {
       required this.isConstrain,
       required this.makeDarkerOutside,
       required this.imageEdgeInsets,
+      this.useInitialFullCrop = false,
       Key? key})
       : super(key: key) {
     process = ImageProcess(_imageBytes,
-        encodingQuality: encodingQuality,
-        workerPath: workerPath,
-        outputImageFormat: outputImageFormat);
+        encodingQuality: encodingQuality, workerPath: workerPath, outputImageFormat: outputImageFormat);
   }
 
   @override
@@ -192,12 +186,17 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _setOrientation();
+  }
+
+  @override
   Widget build(BuildContext context) {
     /// Wait till image creates from image bytes.
     if (finalImageBytes != null) {
       return LayoutBuilder(
         builder: (context, constraint) {
-          _setOrientation();
           return StatefulBuilder(
             builder: (context, state) {
               _setTopHeight();
@@ -221,24 +220,23 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
                           state: state,
                         ),
                         CroppingImageView(
-                          state: state,
-                          squareCircleSize: widget.squareCircleSize,
-                          colorForWhiteSpace: widget._colorForWhiteSpace,
-                          squareBorderWidth: widget.squareBorderWidth,
-                          squareCircleColor: widget.squareCircleColor,
-                          makeDarkerOutside: widget.makeDarkerOutside,
-                          isConstrain: widget.isConstrain,
-                          imageEdgeInsets: widget.imageEdgeInsets,
-                        ),
+                            state: state,
+                            squareCircleSize: widget.squareCircleSize,
+                            colorForWhiteSpace: widget._colorForWhiteSpace,
+                            squareBorderWidth: widget.squareBorderWidth,
+                            squareCircleColor: widget.squareCircleColor,
+                            makeDarkerOutside: widget.makeDarkerOutside,
+                            isConstrain: widget.isConstrain,
+                            imageEdgeInsets: widget.imageEdgeInsets,
+                            useInitialFullCrop: widget.useInitialFullCrop),
                         ShowCropImageRatios(
-                          state: state,
-                          defaultTextColor: widget.defaultTextColor,
-                          selectedImageRatio: widget.selectedImageRatio,
-                          selectedTextColor: widget.selectedTextColor,
-                          visibleOtherAspectRatios:
-                              widget.visibleOtherAspectRatios,
-                          customAspectRatios: widget.customAspectRatios,
-                        ),
+                            state: state,
+                            defaultTextColor: widget.defaultTextColor,
+                            selectedImageRatio: widget.selectedImageRatio,
+                            selectedTextColor: widget.selectedTextColor,
+                            visibleOtherAspectRatios: widget.visibleOtherAspectRatios,
+                            customAspectRatios: widget.customAspectRatios,
+                            useInitialFullCrop: widget.useInitialFullCrop),
                       ],
                     ),
                   ),
@@ -266,9 +264,11 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
       finalImageBytes = widget.process.imageBytes;
       _setDeviceHeightWidth();
 
-      SetImageRatio.setImageRatio(
-          null, widget.selectedImageRatio ?? CropAspectRatio.free());
-      SetImageRatio.setDefaultButtonPosition();
+      if (!widget.useInitialFullCrop) {
+        isImageLoaded = true;
+        SetImageRatio.setImageRatio(null, widget.selectedImageRatio ?? CropAspectRatio.free());
+        SetImageRatio.setDefaultButtonPosition();
+      }
       setState(() {});
     }, (image) {
       libraryImage = image;
@@ -294,6 +294,7 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
     if (topViewHeight == 0) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
         topViewHeight = stackGlobalKey.globalPaintBounds?.top ?? 0;
+        leftViewWidth = stackGlobalKey.globalPaintBounds?.left ?? 0;
       });
     }
   }
@@ -301,12 +302,24 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
   /// set orientation for landscape and portrait mode.
   void _setOrientation() {
     Orientation currentOrientation = MediaQuery.of(context).orientation;
-    if (currentOrientation == Orientation.landscape) {
-      _setDeviceHeightWidth();
-      SetImageRatio.setDefaultButtonPosition();
-    } else if (currentOrientation == Orientation.portrait) {
-      _setDeviceHeightWidth();
-      SetImageRatio.setDefaultButtonPosition();
+    if (widget.useInitialFullCrop) {
+      if (isImageLoaded) {
+        _setDeviceHeightWidth();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          topViewHeight = stackGlobalKey.globalPaintBounds?.top ?? 0;
+          leftViewWidth = stackGlobalKey.globalPaintBounds?.left ?? 0;
+          SetImageRatio.setTheWholeImageSize(widget.squareCircleSize, false);
+          setState(() {});
+        });
+      }
+    } else {
+      if (currentOrientation == Orientation.landscape) {
+        _setDeviceHeightWidth();
+        SetImageRatio.setDefaultButtonPosition();
+      } else if (currentOrientation == Orientation.portrait) {
+        _setDeviceHeightWidth();
+        SetImageRatio.setDefaultButtonPosition();
+      }
     }
   }
 }

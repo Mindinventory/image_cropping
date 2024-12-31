@@ -24,6 +24,8 @@ class CroppingImageView extends StatefulWidget {
 
   final EdgeInsets? imageEdgeInsets;
 
+  final bool useInitialFullCrop;
+
   const CroppingImageView({
     this.colorForWhiteSpace,
     this.squareCircleSize,
@@ -33,6 +35,7 @@ class CroppingImageView extends StatefulWidget {
     this.makeDarkerOutside,
     this.isConstrain,
     this.state,
+    required this.useInitialFullCrop,
     Key? key,
   }) : super(key: key);
 
@@ -41,6 +44,20 @@ class CroppingImageView extends StatefulWidget {
 }
 
 class _CroppingImageViewState extends State<CroppingImageView> {
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.useInitialFullCrop) {
+      WidgetsBinding.instance.addPostFrameCallback((_){
+        Future.delayed(Duration(milliseconds: 500), () {
+          SetImageRatio.setTheWholeImageSize(widget.squareCircleSize ?? 1, true);
+          setState(() {});
+        });
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -51,22 +68,24 @@ class _CroppingImageViewState extends State<CroppingImageView> {
             /// Showing image in screen
             loadImage(),
 
-            showImageDarkFilter(widget.state),
+            if (isImageLoaded) ...[
+              showImageDarkFilter(widget.state),
 
-            /// Showing border of crop view.
-            showImageCropButtonsBorder(widget.state),
+              /// Showing border of crop view.
+              showImageCropButtonsBorder(widget.state),
 
-            /// Displaying a dot button in left top.
-            showImageCropLeftTopButton(widget.state),
+              /// Displaying a dot button in left top.
+              showImageCropLeftTopButton(widget.state),
 
-            /// Displaying a dot button in left bottom.
-            showImageCropLeftBottomButton(widget.state),
+              /// Displaying a dot button in left bottom.
+              showImageCropLeftBottomButton(widget.state),
 
-            /// Displaying a dot button in right top.
-            showImageCropRightTopButton(widget.state),
+              /// Displaying a dot button in right top.
+              showImageCropRightTopButton(widget.state),
 
-            /// Displaying a dot button in right bottom.
-            showImageCropRightBottomButton(widget.state),
+              /// Displaying a dot button in right bottom.
+              showImageCropRightBottomButton(widget.state),
+            ],
           ],
         ),
       ),

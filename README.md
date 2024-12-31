@@ -27,13 +27,13 @@ This plugin supports cropping and rotating images for multiplatform. It Allow in
 
 
 ### Allow inclusion of background.
-![Image Plugin](https://github.com/Mindinventory/image_cropping/blob/master/assets/image_plugin_1.gif)
+![Image Plugin](https://github.com/Mindinventory/image_cropping/blob/master/assets/image_plugin_1.gif?raw=true)
 
 ### Rotation of image.
-![Image Plugin](https://github.com/Mindinventory/image_cropping/blob/master/assets/image_plugin_2.gif)
+![Image Plugin](https://github.com/Mindinventory/image_cropping/blob/master/assets/image_plugin_2.gif?raw=true)
 
 ### Change ratio of selection.
-![Image Plugin](https://github.com/Mindinventory/image_cropping/blob/master/assets/image_plugin_3.gif)
+![Image Plugin](https://github.com/Mindinventory/image_cropping/blob/master/assets/image_plugin_3.gif?raw=true)
 
 ## Installation
 If you are targeting web, don't forget to add worker.js in your project's root directory.

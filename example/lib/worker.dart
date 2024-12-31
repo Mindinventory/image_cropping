@@ -2,10 +2,10 @@
 library sample;
 
 import 'dart:html';
+import 'dart:js_interop';
 import 'dart:typed_data';
 
 import 'package:image/image.dart' as Library;
-import 'package:js/js.dart';
 
 @JS('self')
 external DedicatedWorkerGlobalScope get self;
@@ -35,11 +35,10 @@ void main() {
         arguments[7],
       );*/
 
-      Uint8List sourceBytes = arguments[2];
-      int width = arguments[3];
-      int height = arguments[1];
+      Uint8List sourceBytes = arguments[1];
 
-      Library.Image sourceImage = Library.decodeImage(Uint8List.view(sourceBytes.buffer))!;
+      Library.Image sourceImage = Library.Image.fromBytes(bytes: sourceBytes.buffer, width: arguments[2], height: arguments[3],
+          order: Library.ChannelOrder.rgb);
       Library.Image croppedImage = Library.copyCrop(
         sourceImage,
         x: arguments[4], // x coordinate of the top-left corner of the cropped region
