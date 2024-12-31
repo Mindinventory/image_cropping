@@ -30,7 +30,7 @@ class ImageProcess {
     imageBytes = Uint8List.fromList(intList);
     onBytesLoaded.call();
     Uint8List byteData = Uint8List.fromList(event.data[3]);
-    final image = await Image.fromBytes(
+    final image = Image.fromBytes(
         width: event.data[1], height: event.data[2], bytes: byteData.buffer,
         numChannels: 3);
     onLibraryImageLoaded.call(image);
