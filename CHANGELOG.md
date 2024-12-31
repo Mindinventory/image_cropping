@@ -1,4 +1,4 @@
-### [0.0.15] - 2024-12-24
+### [0.0.15] - 2024-12-31
 * Introduced the `useInitialFullCrop` property to set the initial crop size of the image to its full dimensions.
 
 ### [0.0.14] - 2023-12-01
