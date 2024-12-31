@@ -1,6 +1,6 @@
 name: image_cropping
 description: This package helps you to crop image with ratio and free scale.
-version: 0.0.14
+version: 0.0.15
 repository: https://github.com/Mindinventory/image_cropping
 
 
@@ -10,9 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  image: ^4.5.2
-  cupertino_icons: ^1.0.6
+  image: 4.3.0
   equatable: ^2.0.7
 
 dev_dependencies:

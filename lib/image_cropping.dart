@@ -186,12 +186,17 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _setOrientation();
+  }
+
+  @override
   Widget build(BuildContext context) {
     /// Wait till image creates from image bytes.
     if (finalImageBytes != null) {
       return LayoutBuilder(
         builder: (context, constraint) {
-          _setOrientation();
           return StatefulBuilder(
             builder: (context, state) {
               _setTopHeight();
@@ -215,25 +220,23 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
                           state: state,
                         ),
                         CroppingImageView(
-                          state: state,
-                          squareCircleSize: widget.squareCircleSize,
-                          colorForWhiteSpace: widget._colorForWhiteSpace,
-                          squareBorderWidth: widget.squareBorderWidth,
-                          squareCircleColor: widget.squareCircleColor,
-                          makeDarkerOutside: widget.makeDarkerOutside,
-                          isConstrain: widget.isConstrain,
-                          imageEdgeInsets: widget.imageEdgeInsets,
-                          useInitialFullCrop: widget.useInitialFullCrop
-                        ),
+                            state: state,
+                            squareCircleSize: widget.squareCircleSize,
+                            colorForWhiteSpace: widget._colorForWhiteSpace,
+                            squareBorderWidth: widget.squareBorderWidth,
+                            squareCircleColor: widget.squareCircleColor,
+                            makeDarkerOutside: widget.makeDarkerOutside,
+                            isConstrain: widget.isConstrain,
+                            imageEdgeInsets: widget.imageEdgeInsets,
+                            useInitialFullCrop: widget.useInitialFullCrop),
                         ShowCropImageRatios(
-                          state: state,
-                          defaultTextColor: widget.defaultTextColor,
-                          selectedImageRatio: widget.selectedImageRatio,
-                          selectedTextColor: widget.selectedTextColor,
-                          visibleOtherAspectRatios: widget.visibleOtherAspectRatios,
-                          customAspectRatios: widget.customAspectRatios,
-                          useInitialFullCrop: widget.useInitialFullCrop
-                        ),
+                            state: state,
+                            defaultTextColor: widget.defaultTextColor,
+                            selectedImageRatio: widget.selectedImageRatio,
+                            selectedTextColor: widget.selectedTextColor,
+                            visibleOtherAspectRatios: widget.visibleOtherAspectRatios,
+                            customAspectRatios: widget.customAspectRatios,
+                            useInitialFullCrop: widget.useInitialFullCrop),
                       ],
                     ),
                   ),
@@ -299,26 +302,24 @@ class _ImageCroppingScreenState extends State<ImageCroppingScreen> {
   /// set orientation for landscape and portrait mode.
   void _setOrientation() {
     Orientation currentOrientation = MediaQuery.of(context).orientation;
-    if(widget.useInitialFullCrop){
-      if(isImageLoaded) {
+    if (widget.useInitialFullCrop) {
+      if (isImageLoaded) {
         _setDeviceHeightWidth();
-        WidgetsBinding.instance.addPostFrameCallback((_){
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           topViewHeight = stackGlobalKey.globalPaintBounds?.top ?? 0;
           leftViewWidth = stackGlobalKey.globalPaintBounds?.left ?? 0;
           SetImageRatio.setTheWholeImageSize(widget.squareCircleSize, false);
           setState(() {});
         });
-
       }
-    }
-    else {
-    if (currentOrientation == Orientation.landscape) {
-      _setDeviceHeightWidth();
-      SetImageRatio.setDefaultButtonPosition();
-    } else if (currentOrientation == Orientation.portrait) {
-      _setDeviceHeightWidth();
-      SetImageRatio.setDefaultButtonPosition();
-    }
+    } else {
+      if (currentOrientation == Orientation.landscape) {
+        _setDeviceHeightWidth();
+        SetImageRatio.setDefaultButtonPosition();
+      } else if (currentOrientation == Orientation.portrait) {
+        _setDeviceHeightWidth();
+        SetImageRatio.setDefaultButtonPosition();
+      }
     }
   }
 }

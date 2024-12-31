@@ -35,9 +35,10 @@ void main() {
         arguments[7],
       );*/
 
-      Uint8List sourceBytes = arguments[2];
+      Uint8List sourceBytes = arguments[1];
 
-      Library.Image sourceImage = Library.decodeImage(Uint8List.view(sourceBytes.buffer))!;
+      Library.Image sourceImage = Library.Image.fromBytes(bytes: sourceBytes.buffer, width: arguments[2], height: arguments[3],
+          order: Library.ChannelOrder.rgb);
       Library.Image croppedImage = Library.copyCrop(
         sourceImage,
         x: arguments[4], // x coordinate of the top-left corner of the cropped region

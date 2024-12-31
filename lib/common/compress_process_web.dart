@@ -29,11 +29,10 @@ class ImageProcess {
     final List<int> intList = event.data[0];
     imageBytes = Uint8List.fromList(intList);
     onBytesLoaded.call();
-    Uint8List byteData = Uint8List.fromList(imageBytes);
-    int width = byteData.buffer.asByteData().getInt32(0, Endian.big);
-    int height = byteData.buffer.asByteData().getInt32(4, Endian.big);
-
-    final image = await Image.fromBytes(width: width, height: height, bytes: imageBytes.buffer);
+    Uint8List byteData = Uint8List.fromList(event.data[3]);
+    final image = await Image.fromBytes(
+        width: event.data[1], height: event.data[2], bytes: byteData.buffer,
+        numChannels: 3);
     onLibraryImageLoaded.call(image);
   }
 
@@ -53,8 +52,10 @@ class ImageProcess {
       outputImageFormat.index
     ]);
     final event = await worker.onMessage.first;
+    Uint8List byteData = Uint8List.fromList(event.data[0]);
+    Uint8List byteData2 = Uint8List.fromList(event.data[1]);
     onImageLoaded.call(
-        Image.fromBytes(width: imageCropWidth, height: imageCropHeight, bytes: event.data[0], order: ChannelOrder.rgb),
-        event.data[1]);
+        Image.fromBytes(width: imageCropWidth, height: imageCropHeight, bytes: byteData.buffer, numChannels: 3),
+        byteData2);
   }
 }
