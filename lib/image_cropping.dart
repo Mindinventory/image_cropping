@@ -141,12 +141,29 @@ class ImageCroppingScreen extends StatefulWidget {
   final bool makeDarkerOutside;
 
   /// pass custom aspect ratios
+  /// Important:
+  /// These ratios are applied only when `useInitialFullCrop` is set to `false`.
+  /// If `useInitialFullCrop == true`, the cropper initializes using the
+  /// full image dimensions, and `customAspectRatios` are not applied
+  /// during initialization.
   final List<CropAspectRatio>? customAspectRatios;
 
   /// Choose output format, default is jpg
   final OutputImageFormat outputImageFormat;
 
   /// Use this flag to set the initial crop size to match the image's full size.
+  /// When set to `true`, the crop area is initialized to cover the entire image
+  /// on first render.
+  ///
+  /// Note:
+  /// If `useInitialFullCrop` is enabled, any value provided via
+  /// customAspectRatios` or `selectedImageRatio` will be ignored initially.
+  /// This is expected behavior, as the full image size does not conform to
+  /// a fixed aspect ratio.
+  /// Users can still manually change the crop area or select other ratios
+  /// after the initial render (if enabled).
+  ///
+  /// Default: `false`
   final bool useInitialFullCrop;
 
   ImageCroppingScreen(this._context, Uint8List _imageBytes, this._onImageStartLoading, this._onImageEndLoading,

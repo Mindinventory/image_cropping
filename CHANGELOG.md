@@ -1,3 +1,6 @@
+## [0.0.15] - 2025-12-15
+* Flutter version and library details updated.
+
 ## [0.0.15] - 2024-12-31
 * Introduced the `useInitialFullCrop` property to set the initial crop size of the image to its full dimensions.
 
